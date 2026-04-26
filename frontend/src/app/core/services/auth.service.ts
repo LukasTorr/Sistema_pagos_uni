@@ -19,7 +19,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // Verifica si hay sesión activa al iniciar la app
   checkSession(): void {
     const token = this.getToken();
     const user  = this.getStoredUser();
@@ -30,7 +29,9 @@ export class AuthService {
   }
 
   login(dto: LoginDto): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, dto).pipe(
+    return this.http.post<AuthResponse>(
+      `${this.apiUrl}/auth/login`, dto
+    ).pipe(
       tap(res => {
         localStorage.setItem(this.TOKEN_KEY, res.token);
         localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));

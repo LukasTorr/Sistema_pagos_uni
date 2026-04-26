@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-report-by-service',
-  imports: [],
+  standalone: false,
   templateUrl: './report-by-service.component.html',
   styleUrl: './report-by-service.component.css'
 })
