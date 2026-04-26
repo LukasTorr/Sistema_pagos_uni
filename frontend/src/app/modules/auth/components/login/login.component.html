@@ -1,0 +1,90 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(135deg, #1B3A6B 0%, #2E75B6 100%);">
+
+  <div class="nyu-card p-5" style="width:100%; max-width:420px;">
+
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+      <div class="fs-1 mb-2"></div>
+      <!-- Interpolation -->
+      <h4 class="fw-bold" style="color:var(--nyu-blue)">NYU Tesorería</h4>
+      <p class="text-muted small mb-0">Sistema de Pagos Centralizado</p>
+    </div>
+
+    <!-- Alerta de error -->
+    <!-- NgIf: solo muestra si hay error -->
+    <app-alert
+      *ngIf="errorMsg"
+      [message]="errorMsg"
+      type="danger"
+      [autoClose]="false">
+    </app-alert>
+
+    <!-- Formulario reactivo -->
+    <!-- Event Binding: captura el submit -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Campo Email -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Correo electrónico</label>
+        <!-- Property Binding: clase dinámica según validación -->
+        <input
+          type="email"
+          class="form-control"
+          [class.is-invalid]="email.invalid && email.touched"
+          formControlName="email"
+          placeholder="admin@nyu.edu">
+        <div class="invalid-feedback">
+          <!-- NgIf-else implícito con múltiples NgIf -->
+          <span *ngIf="email.errors?.['required']">
+            El correo es requerido.
+          </span>
+          <span *ngIf="email.errors?.['email']">
+            Ingresa un correo válido.
+          </span>
+        </div>
+      </div>
+
+      <!-- Campo Contraseña -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          [class.is-invalid]="password.invalid && password.touched"
+          formControlName="password"
+          placeholder="••••••••">
+        <div class="invalid-feedback">
+          <span *ngIf="password.errors?.['required']">
+            La contraseña es requerida.
+          </span>
+          <span *ngIf="password.errors?.['minlength']">
+            Mínimo 6 caracteres.
+          </span>
+        </div>
+      </div>
+
+      <!-- Botón submit -->
+      <!-- Property Binding: deshabilita mientras carga -->
+      <button
+        type="submit"
+        class="btn btn-nyu w-100 py-2 fw-semibold"
+        [disabled]="loading">
+        <!-- NgIf: spinner mientras carga -->
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm me-2">
+        </span>
+        <!-- Interpolation: texto dinámico -->
+        {{ loading ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+
+    </form>
+
+    <!-- Pie de página -->
+    <p class="text-center text-muted small mt-4 mb-0">
+      NYU — Sistema de Pagos y Tesorería Central
+    </p>
+
+  </div>
+</div>

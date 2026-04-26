@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --nyu-blue:       #1B3A6B;
+  --nyu-blue-med:   #2E75B6;
+  --nyu-blue-light: #D6E4F7;
+  --nyu-success:    #198754;
+  --nyu-danger:     #DC3545;
+  --nyu-warning:    #FFC107;
+  --nyu-gray-bg:    #F5F7FA;
+  --nyu-text:       #212529;
+}
+
+body {
+  background-color: var(--nyu-gray-bg);
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--nyu-text);
+}
+
+/* ── Navbar ── */
+.nyu-navbar {
+  background-color: var(--nyu-blue);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ── Cards ── */
+.nyu-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+/* ── Badges de estado de orden ── */
+.badge-pending   { background-color: var(--nyu-warning); color: #000; }
+.badge-paid      { background-color: var(--nyu-success); color: #fff; }
+.badge-rejected  { background-color: var(--nyu-danger);  color: #fff; }
+.badge-cancelled { background-color: #6c757d;            color: #fff; }
+
+/* ── Botón primario NYU ── */
+.btn-nyu {
+  background-color: var(--nyu-blue);
+  color: #fff;
+  border: none;
+}
+.btn-nyu:hover {
+  background-color: var(--nyu-blue-med);
+  color: #fff;
+}
+
+/* ── Spinner overlay ── */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
