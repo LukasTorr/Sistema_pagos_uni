@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-report-by-date',
-  imports: [],
+  standalone: false,
   templateUrl: './report-by-date.component.html',
   styleUrl: './report-by-date.component.css'
 })
