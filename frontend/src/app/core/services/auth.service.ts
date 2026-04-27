@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { LoginDto } from '../../modules/auth/models/login.dto';
 import { AuthResponse } from '../../modules/auth/models/auth-response.model';
+import { USERS_MOCK } from '../../shared/mocks/users.mock';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'nyu_token';
   private readonly USER_KEY  = 'nyu_user';
   private readonly apiUrl    = environment.apiUrl;
+
+  // ← cambiar a false cuando el backend esté listo
+  private useMock = true;
 
   private _isLoggedIn$  = new BehaviorSubject<boolean>(false);
   private _currentUser$ = new BehaviorSubject<any>(null);
@@ -29,6 +34,38 @@ export class AuthService {
   }
 
   login(dto: LoginDto): Observable<AuthResponse> {
+    if (this.useMock) {
+      // Busca el usuario en el mock
+      const found = USERS_MOCK.find(
+        u => u.email === dto.email && u.password === dto.password
+      );
+
+      if (!found) {
+        return throwError(() => new Error('Credenciales incorrectas.'));
+      }
+
+      // Simula respuesta del backend
+      const mockResponse: AuthResponse = {
+        token: `mock-jwt-token-${found.id}-${Date.now()}`,
+        user: {
+          id:      found.id,
+          name:    found.name,
+          email:   found.email,
+          role:    found.role,
+          service: found.service
+        }
+      };
+
+      // Guarda en localStorage
+      localStorage.setItem(this.TOKEN_KEY, mockResponse.token);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(mockResponse.user));
+      this._isLoggedIn$.next(true);
+      this._currentUser$.next(mockResponse.user);
+
+      return of(mockResponse);
+    }
+
+    // Cuando el backend esté listo, usar esto:
     return this.http.post<AuthResponse>(
       `${this.apiUrl}/auth/login`, dto
     ).pipe(
@@ -54,6 +91,10 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  getCurrentUser(): any {
+    return this.getStoredUser();
   }
 
   private getStoredUser(): any {

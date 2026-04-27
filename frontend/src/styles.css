@@ -57,3 +57,39 @@ body {
   justify-content: center;
   z-index: 9999;
 }
+
+/* ── Metric cards ── */
+.metric-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-left: 4px solid var(--nyu-blue);
+}
+
+.metric-card.metric-pending {
+  border-left-color: var(--nyu-warning);
+}
+
+.metric-card.metric-paid {
+  border-left-color: var(--nyu-success);
+}
+
+.metric-card.metric-rejected {
+  border-left-color: var(--nyu-danger);
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--nyu-blue);
+  line-height: 1;
+}

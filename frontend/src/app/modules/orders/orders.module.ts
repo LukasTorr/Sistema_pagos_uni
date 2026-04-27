@@ -14,5 +14,12 @@ import { OrderDetailComponent } from './components/order-detail/order-detail.com
     OrderCreateComponent,
     OrderDetailComponent
   ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    OrdersRoutingModule,
+    SharedModule
+  ]
 })
 export class OrdersModule {}
