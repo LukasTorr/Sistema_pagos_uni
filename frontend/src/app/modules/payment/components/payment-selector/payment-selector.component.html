@@ -1,1 +1,21 @@
-<p>payment-selector works!</p>
+<div class="container">
+
+  <h3>Selecciona medio de pago</h3>
+
+  <button (click)="selectMethod('card')">Tarjeta</button>
+  <button (click)="selectMethod('transfer')">Transferencia</button>
+  <button (click)="selectMethod('wallet')">Billetera</button>
+
+  <hr>
+
+  <ng-container [ngSwitch]="selectedMethod">
+
+    <app-card-form *ngSwitchCase="'card'"></app-card-form>
+    <app-transfer-form *ngSwitchCase="'transfer'"></app-transfer-form>
+    <app-wallet-form *ngSwitchCase="'wallet'"></app-wallet-form>
+
+  </ng-container>
+
+  <button (click)="submit()">Pagar</button>
+
+</div>

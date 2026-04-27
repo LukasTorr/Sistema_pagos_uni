@@ -1,1 +1,6 @@
-<p>card-form works!</p>
+<form [formGroup]="form">
+  <input formControlName="cardNumber" placeholder="Número de tarjeta">
+  <input formControlName="holder" placeholder="Titular">
+  <input formControlName="expiry" placeholder="MM/YY">
+  <input formControlName="cvv" placeholder="CVV">
+</form>

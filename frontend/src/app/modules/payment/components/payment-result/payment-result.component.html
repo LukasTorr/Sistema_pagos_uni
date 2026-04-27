@@ -1,1 +1,16 @@
-<p>payment-result works!</p>
+<div *ngIf="result">
+
+  <div *ngIf="result.status === OrderStatus.PAID; else rejected">
+    <h2>Pago exitoso</h2>
+    <p>Orden: {{ result.orderId }}</p>
+    <p>Fecha: {{ result.processedAt }}</p>
+
+    <button>Ver comprobante</button>
+  </div>
+
+  <ng-template #rejected>
+    <h2>Pago rechazado</h2>
+    <p>{{ result.rejectionReason }}</p>
+  </ng-template>
+
+</div>
