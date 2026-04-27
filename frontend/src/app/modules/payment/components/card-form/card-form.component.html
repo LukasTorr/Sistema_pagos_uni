@@ -1,6 +1,75 @@
-<form [formGroup]="form">
-  <input formControlName="cardNumber" placeholder="Número de tarjeta">
-  <input formControlName="holder" placeholder="Titular">
-  <input formControlName="expiry" placeholder="MM/YY">
-  <input formControlName="cvv" placeholder="CVV">
+<form [formGroup]="form" class="card-form">
+
+  <!-- NÚMERO TARJETA -->
+  <div class="form-group">
+    <label class="form-label">Número de tarjeta</label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="cardNumber"
+      maxlength="19"
+      (input)="formatCardNumber($event)"
+      placeholder="1234 5678 9012 3456">
+
+    <small class="text-danger"
+      *ngIf="isInvalid('cardNumber')">
+      Tarjeta inválida
+    </small>
+  </div>
+
+  <!-- TITULAR -->
+  <div class="form-group">
+    <label class="form-label">Titular</label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="holder"
+      placeholder="Nombre del titular">
+
+    <small class="text-danger"
+      *ngIf="isInvalid('holder')">
+      Campo requerido
+    </small>
+  </div>
+
+  <!-- EXPIRACIÓN + CVV -->
+  <div class="form-row-inline">
+
+    <!-- EXPIRACIÓN -->
+    <div class="form-group expiry">
+      <label class="form-label">Expiración (MM/YY)</label>
+
+      <input
+        type="text"
+        class="form-control"
+        formControlName="expiry"
+        placeholder="08/28">
+
+      <small class="text-danger"
+        *ngIf="isInvalid('expiry')">
+        Fecha inválida
+      </small>
+    </div>
+
+    <!-- CVV -->
+    <div class="form-group cvv">
+      <label class="form-label">CVV</label>
+
+      <input
+        type="password"
+        class="form-control"
+        formControlName="cvv"
+        maxlength="4"
+        placeholder="123">
+
+      <small class="text-danger"
+        *ngIf="isInvalid('cvv')">
+        CVV inválido
+      </small>
+    </div>
+
+  </div>
+
 </form>

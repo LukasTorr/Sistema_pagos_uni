@@ -1,6 +1,25 @@
-<input [(ngModel)]="identifier" placeholder="Email o teléfono">
-<input #pinInput="ngModel"
-       [(ngModel)]="pin"
-       minlength="4"
-       maxlength="6"
-       placeholder="PIN">
+<form class="login-form">
+
+  <div class="form-group">
+    <label class="form-label">Email o teléfono</label>
+    <input
+      class="form-control"
+      [(ngModel)]="identifier"
+      name="identifier"
+      placeholder="ejemplo@email.com o +56..."
+      autocomplete="username">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">PIN</label>
+    <input
+      class="form-control"
+      type="password"
+      [(ngModel)]="pin"
+      name="pin"
+      minlength="4"
+      maxlength="6"
+      placeholder="••••">
+  </div>
+
+</form>

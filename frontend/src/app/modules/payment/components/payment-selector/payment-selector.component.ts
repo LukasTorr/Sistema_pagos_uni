@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 
 import { CardFormComponent } from '../card-form/card-form.component';
 import { TransferFormComponent } from '../transfer-form/transfer-form.component';
@@ -18,36 +20,60 @@ import { WalletFormComponent } from '../wallet-form/wallet-form.component';
 })
 export class PaymentSelectorComponent {
 
-  selectedMethod: 'card' | 'transfer' | 'wallet' = 'card';
+  selectedMethod: string = 'card';
 
-  @ViewChild(CardFormComponent) cardForm!: CardFormComponent;
-  @ViewChild(TransferFormComponent) transferForm!: TransferFormComponent;
-  @ViewChild(WalletFormComponent) walletForm!: WalletFormComponent;
+  cardForm: FormGroup | null = null; // ✔ más seguro que !:
 
-  @Output() paymentData = new EventEmitter<any>();
+  constructor(private router: Router) {}
 
-  selectMethod(method: 'card' | 'transfer' | 'wallet') {
+  /* =========================
+     CAMBIO DE MÉTODO
+  ========================= */
+  selectMethod(method: string) {
     this.selectedMethod = method;
   }
 
-  submit() {
-    let data;
+  /* =========================
+     RECIBE FORM DESDE CARD COMPONENT
+  ========================= */
+  onCardFormReady(form: FormGroup) {
+    this.cardForm = form;
+  }
 
-    switch (this.selectedMethod) {
-      case 'card':
-        data = this.cardForm.getData();
-        break;
-      case 'transfer':
-        data = this.transferForm.getData();
-        break;
-      case 'wallet':
-        data = this.walletForm.getData();
-        break;
+  /* =========================
+     SUBMIT GLOBAL
+  ========================= */
+  submit() {
+
+    if (this.selectedMethod === 'card') {
+
+      if (!this.cardForm) {
+        return;
+      }
+
+      if (this.cardForm.invalid) {
+        this.cardForm.markAllAsTouched();
+        return;
+      }
     }
 
-    this.paymentData.emit({
-      method: this.selectedMethod,
-      data
+    const result = {
+      status: 'PAID',
+      orderId: this.generateOrderId(),
+      processedAt: new Date(),
+      rejectionReason: null
+    };
+
+    this.router.navigate(['/payment/result'], {
+      state: { result }
     });
   }
+
+  /* =========================
+     UTIL: ORDER ID SIMPLE
+  ========================= */
+  private generateOrderId(): string {
+    return Math.floor(Math.random() * 1000000000).toString();
+  }
+
 }

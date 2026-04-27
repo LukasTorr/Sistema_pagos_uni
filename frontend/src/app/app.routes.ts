@@ -20,9 +20,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'payment/:id',
+    path: 'payment',
     loadChildren: () =>
-      import('./modules/payment/payment.module').then(m => m.PaymentModule),
+      import('./modules/payment/payment.routes').then(m => m.PAYMENT_ROUTES),
   },
   {
     path: 'receipt',

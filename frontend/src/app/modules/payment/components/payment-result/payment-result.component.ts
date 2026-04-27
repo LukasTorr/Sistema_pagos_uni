@@ -1,8 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { PaymentResult } from '../../models/payment-result.model';
-import { OrderStatus } from '../../../../shared/enums/order-status.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-result',
@@ -12,8 +10,9 @@ import { OrderStatus } from '../../../../shared/enums/order-status.enum';
 })
 export class PaymentResultComponent {
 
-  @Input() result!: PaymentResult;
+  result: any;
 
-  OrderStatus = OrderStatus;
-
+  constructor(private router: Router) {
+    this.result = history.state.result;
+  }
 }
