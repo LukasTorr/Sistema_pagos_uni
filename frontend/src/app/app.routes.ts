@@ -24,8 +24,7 @@ export const routes: Routes = [
   {
     path: 'payment',
     loadChildren: () =>
-      import('./modules/payment/payment.module').then(m => m.PaymentModule)
-    // Sin guard → acceso público para el usuario final
+      import('./modules/payment/payment.routes').then(m => m.PAYMENT_ROUTES),
   },
   {
     path: 'receipt',

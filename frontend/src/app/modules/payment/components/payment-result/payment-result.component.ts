@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-result',
-  standalone: false,
-  templateUrl: './payment-result.component.html',
-  styleUrl: './payment-result.component.css'
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './payment-result.component.html'
 })
 export class PaymentResultComponent {
 
+  result: any;
+
+  constructor(private router: Router) {
+    this.result = history.state.result;
+  }
 }

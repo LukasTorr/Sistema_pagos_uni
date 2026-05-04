@@ -1,1 +1,73 @@
-<p>payment-selector works!</p>
+<div class="payment-page">
+
+  <div class="payment-wrapper">
+
+    <div class="nyu-card nyu-card-lg payment-card">
+
+      <h2 class="title-nyu">Servicio de Pagos NYU</h2>
+
+      <h5 class="subtitle-nyu">Medio de pago</h5>
+
+      <!-- MÉTODOS -->
+      <div class="methods-container">
+
+        <div class="payment-methods">
+
+          <button
+            class="payment-btn"
+            [ngClass]="selectedMethod === 'card' ? 'active' : ''"
+            (click)="selectMethod('card')">
+            Tarjeta
+          </button>
+
+          <button
+            class="payment-btn"
+            [ngClass]="selectedMethod === 'transfer' ? 'active' : ''"
+            (click)="selectMethod('transfer')">
+            Transferencia
+          </button>
+
+          <button
+            class="payment-btn"
+            [ngClass]="selectedMethod === 'wallet' ? 'active' : ''"
+            (click)="selectMethod('wallet')">
+            Billetera
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- FORMULARIOS -->
+      <div class="payment-box">
+
+        <ng-container [ngSwitch]="selectedMethod">
+
+          <app-card-form
+            *ngSwitchCase="'card'"
+            (formReady)="onCardFormReady($event)">
+          </app-card-form>
+
+          <app-transfer-form *ngSwitchCase="'transfer'"></app-transfer-form>
+
+          <app-wallet-form *ngSwitchCase="'wallet'"></app-wallet-form>
+
+        </ng-container>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="pay-button-container">
+        <button
+          class="btn-pay"
+          (click)="submit()"
+          [disabled]="selectedMethod === 'card' && cardForm && cardForm.invalid">
+          Pagar
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
