@@ -51,7 +51,7 @@ export class AuthService {
     if (!apiKey) throw new UnauthorizedException('Private key inválida o inactiva');
 
     const payload = { sub: apiKey.id, service: apiKey.service };
-    const token = this.jwtService.sign(payload, { expiresIn: '5m' }); // token de 5 minutos
+    const token = this.jwtService.sign(payload, { expiresIn: '1m' }); // token de 5 minutos
 
     return { access_token: token, service: apiKey.service };
   }
