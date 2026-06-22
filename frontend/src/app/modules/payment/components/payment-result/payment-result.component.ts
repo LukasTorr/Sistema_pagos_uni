@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
   selector: 'app-payment-result',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './payment-result.component.html'
+  templateUrl: './payment-result.component.html',
+  styleUrls: ['./payment-result.component.css']
 })
 export class PaymentResultComponent {
 
@@ -14,5 +15,9 @@ export class PaymentResultComponent {
 
   constructor(private router: Router) {
     this.result = history.state.result;
+  }
+
+  goHome() {
+    this.router.navigate(['/payment/1']);
   }
 }

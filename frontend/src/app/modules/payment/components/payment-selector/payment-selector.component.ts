@@ -22,58 +22,102 @@ export class PaymentSelectorComponent {
 
   selectedMethod: string = 'card';
 
-  cardForm: FormGroup | null = null; // ✔ más seguro que !:
+  cardForm: FormGroup | null = null;
+  transferForm: FormGroup | null = null;
+  walletForm: FormGroup | null = null;
+
+  isProcessing = false;
 
   constructor(private router: Router) {}
 
-  /* =========================
-     CAMBIO DE MÉTODO
-  ========================= */
-  selectMethod(method: string) {
+  selectMethod(method: string): void {
     this.selectedMethod = method;
   }
 
-  /* =========================
-     RECIBE FORM DESDE CARD COMPONENT
-  ========================= */
-  onCardFormReady(form: FormGroup) {
+  onCardFormReady(form: FormGroup): void {
     this.cardForm = form;
   }
 
-  /* =========================
-     SUBMIT GLOBAL
-  ========================= */
-  submit() {
+  onTransferFormReady(form: FormGroup): void {
+    this.transferForm = form;
+  }
+
+  onWalletFormReady(form: FormGroup): void {
+    this.walletForm = form;
+  }
+
+  get activeForm(): FormGroup | null {
 
     if (this.selectedMethod === 'card') {
-
-      if (!this.cardForm) {
-        return;
-      }
-
-      if (this.cardForm.invalid) {
-        this.cardForm.markAllAsTouched();
-        return;
-      }
+      return this.cardForm;
     }
 
-    const result = {
-      status: 'PAID',
-      orderId: this.generateOrderId(),
-      processedAt: new Date(),
-      rejectionReason: null
-    };
+    if (this.selectedMethod === 'transfer') {
+      return this.transferForm;
+    }
 
-    this.router.navigate(['/payment/result'], {
-      state: { result }
-    });
+    if (this.selectedMethod === 'wallet') {
+      return this.walletForm;
+    }
+
+    return null;
   }
 
-  /* =========================
-     UTIL: ORDER ID SIMPLE
-  ========================= */
+  canPay(): boolean {
+    return !!this.activeForm && this.activeForm.valid;
+  }
+
+  submit(): void {
+
+    if (!this.activeForm) {
+      return;
+    }
+
+    if (this.activeForm.invalid) {
+      this.activeForm.markAllAsTouched();
+      return;
+    }
+
+    this.isProcessing = true;
+
+    setTimeout(() => {
+
+      const result = {
+        status: 'PAID',
+        orderId: this.generateOrderId(),
+        processedAt: new Date(),
+
+        amount: 150000,
+
+        paymentMethod:
+          this.selectedMethod === 'card'
+            ? 'Tarjeta'
+            : this.selectedMethod === 'transfer'
+            ? 'Transferencia'
+            : 'Billetera Digital',
+
+        transactionId:
+          'TXN-' + Math.floor(Math.random() * 1000000000),
+
+        authorizationCode:
+          'AUTH-' + Math.floor(Math.random() * 100000),
+
+        rejectionReason: null
+      };
+
+      this.router.navigate(
+        ['/payment/result'],
+        {
+          state: { result }
+        }
+      );
+
+    }, 1800);
+  }
+
   private generateOrderId(): string {
-    return Math.floor(Math.random() * 1000000000).toString();
+    return Math.floor(
+      Math.random() * 1000000000
+    ).toString();
   }
-
 }
