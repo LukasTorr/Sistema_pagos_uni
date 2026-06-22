@@ -1,26 +1,30 @@
 <form [formGroup]="form" class="card-form">
 
-  <!-- NÚMERO TARJETA -->
-  <div class="form-group">
-    <label class="form-label">Número de tarjeta</label>
+  <div class="form-group mb-3">
+    <label class="form-label">
+      Número de tarjeta
+    </label>
 
     <input
       type="text"
       class="form-control"
       formControlName="cardNumber"
       maxlength="19"
-      (input)="formatCardNumber($event)"
-      placeholder="1234 5678 9012 3456">
+      placeholder="1234 5678 9012 3456"
+      (keypress)="allowOnlyNumbers($event)"
+      (input)="formatCardNumber($event)">
 
-    <small class="text-danger"
+    <small
+      class="text-danger"
       *ngIf="isInvalid('cardNumber')">
       Tarjeta inválida
     </small>
   </div>
 
-  <!-- TITULAR -->
-  <div class="form-group">
-    <label class="form-label">Titular</label>
+  <div class="form-group mb-3">
+    <label class="form-label">
+      Titular
+    </label>
 
     <input
       type="text"
@@ -28,48 +32,94 @@
       formControlName="holder"
       placeholder="Nombre del titular">
 
-    <small class="text-danger"
+    <small
+      class="text-danger"
       *ngIf="isInvalid('holder')">
       Campo requerido
     </small>
   </div>
 
-  <!-- EXPIRACIÓN + CVV -->
-  <div class="form-row-inline">
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">
+        Mes de expiración
+      </label>
 
-    <!-- EXPIRACIÓN -->
-    <div class="form-group expiry">
-      <label class="form-label">Expiración (MM/YY)</label>
-
-      <input
-        type="text"
+      <select
         class="form-control"
-        formControlName="expiry"
-        placeholder="08/28">
+        formControlName="expiryMonth">
 
-      <small class="text-danger"
-        *ngIf="isInvalid('expiry')">
-        Fecha inválida
+        <option value="">
+          Seleccionar mes
+        </option>
+
+        <option
+          *ngFor="let month of months"
+          [value]="month">
+          {{ month }}
+        </option>
+      </select>
+
+      <small
+        class="text-danger"
+        *ngIf="isInvalid('expiryMonth')">
+        Selecciona un mes
       </small>
     </div>
 
-    <!-- CVV -->
-    <div class="form-group cvv">
-      <label class="form-label">CVV</label>
+    <div class="col-md-6">
+      <label class="form-label">
+        Año de expiración
+      </label>
 
-      <input
-        type="password"
+      <select
         class="form-control"
-        formControlName="cvv"
-        maxlength="4"
-        placeholder="123">
+        formControlName="expiryYear">
 
-      <small class="text-danger"
-        *ngIf="isInvalid('cvv')">
-        CVV inválido
+        <option value="">
+          Seleccionar año
+        </option>
+
+        <option
+          *ngFor="let year of years"
+          [value]="year">
+          {{ year }}
+        </option>
+      </select>
+
+      <small
+        class="text-danger"
+        *ngIf="isInvalid('expiryYear')">
+        Selecciona un año
       </small>
     </div>
+  </div>
 
+  <small
+    class="text-danger d-block mb-3"
+    *ngIf="isCardExpired()">
+    La tarjeta se encuentra vencida
+  </small>
+
+  <div class="form-group">
+    <label class="form-label">
+      CVV
+    </label>
+
+    <input
+      type="password"
+      class="form-control"
+      formControlName="cvv"
+      maxlength="4"
+      placeholder="123"
+      (keypress)="allowOnlyNumbers($event)"
+      (input)="sanitizeCvv()">
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('cvv')">
+      CVV inválido
+    </small>
   </div>
 
 </form>

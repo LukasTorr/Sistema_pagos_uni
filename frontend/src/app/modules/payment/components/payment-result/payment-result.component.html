@@ -1,27 +1,75 @@
-<div class="payment-page d-flex justify-content-center align-items-center">
+<div class="receipt-page">
 
-  <div class="payment-wrapper">
+  <div class="receipt-card">
 
-    <div class="nyu-card p-4 text-center">
+    <h2 class="receipt-title">
+      Servicio de Pagos NYU
+    </h2>
 
-      <h2 class="title-nyu">Resultado del pago</h2>
+    <h4 class="receipt-subtitle">
+      Comprobante de Pago
+    </h4>
 
-      <div *ngIf="result">
+    <div class="status-approved">
+      Pago Aprobado
+    </div>
 
-        <div *ngIf="result.status === 'PAID'; else error">
+    <hr>
 
-          <h4 class="text-success">Pago exitoso</h4>
-          <p>Orden: {{ result.orderId }}</p>
-          <p>Fecha: {{ result.processedAt }}</p>
+    <div class="receipt-row">
+      <span>N° Orden</span>
+      <strong>{{ result.orderId }}</strong>
+    </div>
 
-        </div>
+    <div class="receipt-row">
+      <span>Fecha</span>
+      <strong>
+        {{ result.processedAt | date:'dd/MM/yyyy HH:mm' }}
+      </strong>
+    </div>
 
-        <ng-template #error>
-          <h4 class="text-danger">Pago rechazado</h4>
-          <p>{{ result.rejectionReason }}</p>
-        </ng-template>
+    <div class="receipt-row">
+      <span>Método de pago</span>
+      <strong>{{ result.paymentMethod }}</strong>
+    </div>
 
-      </div>
+    <div class="receipt-row">
+      <span>Monto</span>
+      <strong>
+        {{ result.amount | currency:'CLP':'symbol':'1.0-0' }}
+      </strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>ID Transacción</span>
+      <strong>{{ result.transactionId }}</strong>
+    </div>
+
+    <div class="receipt-row">
+      <span>Código Autorización</span>
+      <strong>{{ result.authorizationCode }}</strong>
+    </div>
+
+    <hr>
+
+    <p class="receipt-message">
+      Este documento constituye un comprobante electrónico
+      de pago emitido por el sistema NYU.
+    </p>
+
+    <div class="receipt-actions">
+
+      <button
+        class="btn-receipt"
+        onclick="window.print()">
+        Descargar PDF
+      </button>
+
+      <button
+        class="btn-receipt-secondary"
+        (click)="goHome()">
+        Volver
+      </button>
 
     </div>
 

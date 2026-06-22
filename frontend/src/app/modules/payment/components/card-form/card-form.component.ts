@@ -1,90 +1,159 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  OnInit
+} from '@angular/core';
 
-import { luhnValidator } from '../../luhn.validator';
+import { CommonModule } from '@angular/common';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
+import { luhnValidator } from '../../../validators/luhn.validator';
+import { cardExpiryValidator } from '../../../validators/card-expiry.validator';
 
 @Component({
   selector: 'app-card-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './card-form.component.html'
 })
-export class CardFormComponent {
+export class CardFormComponent implements OnInit {
 
   form: FormGroup;
 
-  @Output() formReady = new EventEmitter<FormGroup>();
+  @Output()
+  formReady = new EventEmitter<FormGroup>();
+
+  months: string[] = [
+    '01', '02', '03', '04',
+    '05', '06', '07', '08',
+    '09', '10', '11', '12'
+  ];
+
+  years: number[] = [];
 
   constructor(private fb: FormBuilder) {
+    const currentYear = new Date().getFullYear();
 
-    this.form = this.fb.group({
-      cardNumber: ['', [Validators.required, luhnValidator]],
-      holder: ['', [Validators.required]],
-      expiry: ['', [Validators.required, this.expiryValidator]],
-      cvv: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]]
-    });
+    for (let i = 0; i < 15; i++) {
+      this.years.push(currentYear + i);
+    }
 
+    this.form = this.fb.group(
+      {
+        cardNumber: [
+          '',
+          [
+            Validators.required,
+            luhnValidator
+          ]
+        ],
+
+        holder: [
+          '',
+          Validators.required
+        ],
+
+        expiryMonth: [
+          '',
+          Validators.required
+        ],
+
+        expiryYear: [
+          '',
+          Validators.required
+        ],
+
+        cvv: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(4)
+          ]
+        ]
+      },
+      {
+        validators: cardExpiryValidator()
+      }
+    );
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.formReady.emit(this.form);
   }
 
-  /* =========================
-     FORMATEO TARJETA EN TIEMPO REAL
-  ========================= */
-  formatCardNumber(event: any) {
+  formatCardNumber(event: Event): void {
+    const input = event.target as HTMLInputElement;
 
-    let value = event.target.value;
+    let value = input.value;
 
-    // solo números
     value = value.replace(/\D/g, '');
 
-    // limitar a 16 dígitos
     if (value.length > 16) {
-      value = value.slice(0, 16);
+      value = value.substring(0, 16);
     }
 
-    // agrupar cada 4 dígitos
     value = value.replace(/(.{4})/g, '$1 ').trim();
 
-    this.form.get('cardNumber')?.setValue(value, { emitEvent: false });
-
-    // marcar como tocado para validación en vivo
-    this.form.get('cardNumber')?.markAsTouched();
+    this.form.get('cardNumber')
+      ?.setValue(value, { emitEvent: false });
   }
 
-  /* =========================
-     EXPIRACIÓN MM/YY
-  ========================= */
-  expiryValidator(control: any) {
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End'
+    ];
 
-    const value = control.value;
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
 
-    if (!value) return null;
-    if (!/^\d{2}\/\d{2}$/.test(value)) return { invalidExpiry: true };
-
-    const [month, year] = value.split('/').map(Number);
-
-    if (month < 1 || month > 12) return { invalidExpiry: true };
-
-    const now = new Date();
-    const currentYear = now.getFullYear() % 100;
-    const currentMonth = now.getMonth() + 1;
-
-    if (year < currentYear) return { invalidExpiry: true };
-    if (year === currentYear && month < currentMonth) return { invalidExpiry: true };
-
-    return null;
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
   }
 
-  /* =========================
-     HELPERS UI
-  ========================= */
+  sanitizeCvv(): void {
+    const control = this.form.get('cvv');
+
+    if (!control?.value) {
+      return;
+    }
+
+    const cleaned = control.value
+      .replace(/\D/g, '')
+      .slice(0, 4);
+
+    control.setValue(cleaned, { emitEvent: false });
+  }
+
   isInvalid(field: string): boolean {
     const control = this.form.get(field);
-    return !!(control && control.invalid && control.touched);
+
+    return !!(
+      control &&
+      control.invalid &&
+      control.touched
+    );
   }
 
+  isCardExpired(): boolean {
+    return !!this.form.errors?.['expiredCard'];
+  }
 }

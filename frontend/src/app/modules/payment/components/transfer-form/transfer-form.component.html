@@ -1,9 +1,18 @@
 <form [formGroup]="form" class="transfer-form">
 
-  <div class="form-group">
-    <label class="form-label">Banco</label>
-    <select class="form-control" formControlName="bank">
-      <option value="" disabled selected>Selecciona tu banco</option>
+  <div class="form-group mb-3">
+    <label class="form-label">
+      Banco
+    </label>
+
+    <select
+      class="form-control"
+      formControlName="bank">
+
+      <option value="">
+        Selecciona tu banco
+      </option>
+
       <option value="banco_estado">BancoEstado</option>
       <option value="banco_chile">Banco de Chile</option>
       <option value="bci">BCI</option>
@@ -15,16 +24,53 @@
       <option value="ripley">Banco Ripley</option>
       <option value="consorcio">Banco Consorcio</option>
     </select>
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('bank')">
+      Selecciona un banco
+    </small>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">Número de cuenta</label>
-    <input type="text" class="form-control" formControlName="accountNumber" placeholder="Ej: 1234567890">
+  <div class="form-group mb-3">
+    <label class="form-label">
+      Número de cuenta
+    </label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="accountNumber"
+      placeholder="Ej: 1234567890"
+      (keypress)="allowOnlyNumbers($event)"
+      (input)="sanitizeAccount()">
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('accountNumber')">
+      Solo se permiten números
+    </small>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">RUT</label>
-    <input type="text" class="form-control" formControlName="rut" placeholder="12.345.678-9">
+  <div class="form-group mb-3">
+    <label class="form-label">
+      RUT
+    </label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="rut"
+      placeholder="12.345.678-5"
+      (keypress)="allowRutCharacters($event)"
+      (input)="sanitizeRut()"
+      (blur)="formatRut()">
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('rut')">
+      RUT inválido
+    </small>
   </div>
 
 </form>

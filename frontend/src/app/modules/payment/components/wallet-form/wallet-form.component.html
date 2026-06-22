@@ -1,25 +1,42 @@
-<form class="login-form">
+<form [formGroup]="form" class="wallet-form">
 
-  <div class="form-group">
-    <label class="form-label">Email o teléfono</label>
+  <div class="form-group mb-3">
+    <label class="form-label">
+      Correo institucional
+    </label>
+
     <input
+      type="email"
       class="form-control"
-      [(ngModel)]="identifier"
-      name="identifier"
-      placeholder="ejemplo@email.com o +56..."
-      autocomplete="username">
+      formControlName="studentEmail"
+      placeholder="estudiante@nyu.cl">
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('studentEmail')">
+      Ingresa un correo válido
+    </small>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">PIN</label>
+  <div class="form-group mb-3">
+    <label class="form-label">
+      PIN
+    </label>
+
     <input
-      class="form-control"
       type="password"
-      [(ngModel)]="pin"
-      name="pin"
-      minlength="4"
+      class="form-control"
+      formControlName="pin"
       maxlength="6"
-      placeholder="••••">
+      placeholder="PIN de 4 a 6 dígitos"
+      (keypress)="allowOnlyNumbers($event)"
+      (input)="sanitizePin()">
+
+    <small
+      class="text-danger"
+      *ngIf="isInvalid('pin')">
+      El PIN debe tener entre 4 y 6 números
+    </small>
   </div>
 
 </form>

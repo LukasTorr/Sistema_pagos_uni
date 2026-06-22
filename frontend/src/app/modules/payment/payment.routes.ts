@@ -4,11 +4,11 @@ import { PaymentResultComponent } from './components/payment-result/payment-resu
 
 export const PAYMENT_ROUTES: Routes = [
   {
-    path: ':id',
-    component: PaymentSelectorComponent
-  },
-  {
     path: 'result',
     component: PaymentResultComponent
+  },
+  {
+    path: ':id',
+    component: PaymentSelectorComponent
   }
 ];

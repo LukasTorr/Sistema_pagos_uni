@@ -1,0 +1,104 @@
+.receipt-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1B3A6B, #2E75B6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+}
+
+.receipt-card {
+  width: 100%;
+  max-width: 650px;
+
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 40px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.receipt-title {
+  text-align: center;
+  color: #1B3A6B;
+  margin-bottom: 10px;
+}
+
+.receipt-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.status-approved {
+  text-align: center;
+
+  background: #198754;
+  color: white;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  font-weight: 600;
+
+  margin-bottom: 20px;
+}
+
+.receipt-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.receipt-message {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.receipt-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 15px;
+
+  margin-top: 30px;
+}
+
+.btn-receipt {
+  border: none;
+
+  background: #1B3A6B;
+
+  color: white;
+
+  padding: 12px 30px;
+
+  border-radius: 30px;
+
+  cursor: pointer;
+}
+
+.btn-receipt-secondary {
+  border: 1px solid #1B3A6B;
+
+  background: white;
+
+  color: #1B3A6B;
+
+  padding: 12px 30px;
+
+  border-radius: 30px;
+
+  cursor: pointer;
+}
