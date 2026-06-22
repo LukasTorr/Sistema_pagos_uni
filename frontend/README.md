@@ -1,59 +1,189 @@
-# Frontend
+# Sistema de Pagos NYU - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.24.
+## Descripción
 
-## Development server
+Frontend desarrollado en Angular para el proyecto *Sistema de Pagos NYU*, una pasarela académica de pagos encargada de centralizar y gestionar pagos provenientes de distintos sistemas universitarios como Matrícula, Biblioteca, Residencia y otros servicios institucionales.
 
-To start a local development server, run:
+La aplicación permite:
 
-```bash
+- Consultar órdenes de pago mediante un identificador único (referenceId).
+- Seleccionar un medio de pago.
+- Procesar pagos simulados.
+- Visualizar comprobantes de pago.
+- Gestionar auditoría y administración de pagos.
+- Integrarse con el backend desarrollado en NestJS mediante API REST.
+- Utilizar autenticación basada en JWT para operaciones protegidas.
+
+---
+
+# Tecnologías Utilizadas
+
+- Angular 17
+- TypeScript
+- Bootstrap
+- RxJS
+- Angular Router
+- Angular Forms (Reactive Forms)
+- JWT Authentication
+- REST API
+
+---
+
+# Arquitectura General
+
+text
+Frontend Angular ---> REST API ---> Backend NestJS ---> MySQL
+
+
+---
+
+# Instalación
+
+## 1. Clonar repositorio
+
+bash
+git clone https://github.com/LukasTorr/Sistema_pagos_uni.git
+cd Sistema_pagos_uni/frontend
+
+
+## 2. Instalar dependencias
+
+bash
+npm install
+
+
+## 3. Configurar entorno
+
+Verificar el archivo:
+
+text
+src/environments/environment.ts
+
+
+Configuración de ejemplo:
+
+ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/v1'
+};
+
+
+Asegurarse de que el backend se encuentre ejecutándose en la misma dirección.
+
+---
+
+# Ejecución del Proyecto
+
+## Modo desarrollo
+
+bash
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+o
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+bash
+npm start
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La aplicación quedará disponible en:
 
-```bash
-ng generate --help
-```
+text
+http://localhost:4200
 
-## Building
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+# Funcionalidades Implementadas
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Pasarela de Pago
 
-## Running unit tests
+- Consulta de órdenes por referencia.
+- Selección de medio de pago.
+- Validación de formularios.
+- Confirmación de pago.
+- Visualización de comprobante.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Métodos de Pago
 
-```bash
-ng test
-```
+- Tarjeta
+- Transferencia Bancaria
+- Billetera Digital
 
-## Running end-to-end tests
+## Seguridad
 
-For end-to-end (e2e) testing, run:
+- JWT Authentication
+- AuthInterceptor
+- Guards de protección
+- Manejo de errores HTTP
 
-```bash
-ng e2e
-```
+## Integración Backend
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Consumo de endpoints REST:
 
-## Additional Resources
+http
+GET    /payments/:referenceId
+PATCH  /payments/:referenceId/confirm
+POST   /auth/login
+POST   /auth/token
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+---
+
+# Estructura del Proyecto
+
+text
+src/
+│
+├── app/
+│   ├── core/
+│   │   ├── services/
+│   │   ├── interceptors/
+│   │   └── guards/
+│   │
+│   ├── modules/
+│   │   ├── auth/
+│   │   ├── payment/
+│   │   ├── orders/
+│   │   ├── reports/
+│   │   └── audit/
+│   │
+│   └── shared/
+│
+├── assets/
+└── environments/
+
+
+---
+
+# Flujo de Pago
+
+text
+Sistema Externo ---> Genera Orden ---> Sistema de Pagos NYU ---> Selección Método de Pago
+---> Confirmación ---> Comprobante
+
+
+
+---
+
+# Desarrollo
+
+## Generar Componentes
+
+bash
+ng generate component nombre-componente
+
+
+## Generar Servicios
+
+bash
+ng generate service nombre-servicio
+
+
+---
+
+# Equipo frontEnd Ravenclaw
+- Kary tudela
+- Denis Condori
+- Andre Gerra
