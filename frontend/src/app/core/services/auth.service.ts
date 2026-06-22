@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { LoginDto } from '../../modules/auth/models/login.dto';
 import { AuthResponse } from '../../modules/auth/models/auth-response.model';
@@ -13,8 +13,7 @@ export class AuthService {
   private readonly USER_KEY  = 'nyu_user';
   private readonly apiUrl    = environment.apiUrl;
 
-  // ← cambiar a false cuando el backend esté listo
-  private useMock = true;
+  private useMock = false;
 
   private _isLoggedIn$  = new BehaviorSubject<boolean>(false);
   private _currentUser$ = new BehaviorSubject<any>(null);
@@ -27,6 +26,7 @@ export class AuthService {
   checkSession(): void {
     const token = this.getToken();
     const user  = this.getStoredUser();
+
     if (token && user) {
       this._isLoggedIn$.next(true);
       this._currentUser$.next(user);
@@ -35,7 +35,6 @@ export class AuthService {
 
   login(dto: LoginDto): Observable<AuthResponse> {
     if (this.useMock) {
-      // Busca el usuario en el mock
       const found = USERS_MOCK.find(
         u => u.email === dto.email && u.password === dto.password
       );
@@ -44,34 +43,48 @@ export class AuthService {
         return throwError(() => new Error('Credenciales incorrectas.'));
       }
 
-      // Simula respuesta del backend
       const mockResponse: AuthResponse = {
         token: `mock-jwt-token-${found.id}-${Date.now()}`,
         user: {
-          id:      found.id,
-          name:    found.name,
-          email:   found.email,
-          role:    found.role,
+          id: found.id,
+          name: found.name,
+          email: found.email,
+          role: found.role,
           service: found.service
         }
       };
 
-      // Guarda en localStorage
       localStorage.setItem(this.TOKEN_KEY, mockResponse.token);
       localStorage.setItem(this.USER_KEY, JSON.stringify(mockResponse.user));
+
       this._isLoggedIn$.next(true);
       this._currentUser$.next(mockResponse.user);
 
       return of(mockResponse);
     }
 
-    // Cuando el backend esté listo, usar esto:
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/auth/login`, dto
+    return this.http.post<any>(
+      `${this.apiUrl}/auth/login`,
+      dto
     ).pipe(
+      map(res => {
+        const authResponse: AuthResponse = {
+          token: res.access_token,
+          user: {
+            id: 1,
+            name: 'admin',
+            email: dto.email,
+            role: 'ADMIN',
+            service: 'MATRICULA'
+          }
+        };
+
+        return authResponse;
+      }),
       tap(res => {
         localStorage.setItem(this.TOKEN_KEY, res.token);
         localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));
+
         this._isLoggedIn$.next(true);
         this._currentUser$.next(res.user);
       })
@@ -81,6 +94,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+
     this._isLoggedIn$.next(false);
     this._currentUser$.next(null);
   }

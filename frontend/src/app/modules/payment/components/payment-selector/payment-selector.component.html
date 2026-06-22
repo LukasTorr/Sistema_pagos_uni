@@ -9,79 +9,160 @@
       </h2>
 
       <h5 class="subtitle-nyu">
-        Medio de pago
+        {{ currentStep === 'method' ? 'Orden de pago' : 'Completar pago' }}
       </h5>
 
-      <div class="methods-container">
-
-        <div class="payment-methods">
-
-          <button
-            class="payment-btn"
-            [ngClass]="selectedMethod === 'card' ? 'active' : ''"
-            (click)="selectMethod('card')">
-
-            Tarjeta
-
-          </button>
-
-          <button
-            class="payment-btn"
-            [ngClass]="selectedMethod === 'transfer' ? 'active' : ''"
-            (click)="selectMethod('transfer')">
-
-            Transferencia
-
-          </button>
-
-          <button
-            class="payment-btn"
-            [ngClass]="selectedMethod === 'wallet' ? 'active' : ''"
-            (click)="selectMethod('wallet')">
-
-            Billetera
-
-          </button>
-
-        </div>
-
+      <div *ngIf="isLoading" class="text-center p-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-3 mb-0">
+          Cargando orden de pago...
+        </p>
       </div>
 
-      <div class="payment-box">
+      <ng-container *ngIf="!isLoading && payment">
 
-        <ng-container [ngSwitch]="selectedMethod">
+        <div
+          class="alert alert-warning text-center mt-3"
+          *ngIf="payment.status !== 'PENDING'">
+          Esta orden ya no se encuentra pendiente de pago.
+        </div>
 
-          <app-card-form
-            *ngSwitchCase="'card'"
-            (formReady)="onCardFormReady($event)">
-          </app-card-form>
+        <ng-container *ngIf="payment.status === 'PENDING'">
 
-          <app-transfer-form
-            *ngSwitchCase="'transfer'"
-            (formReady)="onTransferFormReady($event)">
-          </app-transfer-form>
+          <ng-container *ngIf="currentStep === 'method'">
 
-          <app-wallet-form
-            *ngSwitchCase="'wallet'"
-            (formReady)="onWalletFormReady($event)">
-          </app-wallet-form>
+            <div class="payment-summary">
+
+              <div class="summary-row">
+                <span>Referencia</span>
+                <strong>{{ payment.referenceId }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Servicio</span>
+                <strong>{{ payment.originService }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Descripción</span>
+                <strong>{{ payment.description }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Monto</span>
+                <strong>
+                  {{ payment.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
+                </strong>
+              </div>
+
+            </div>
+
+            <h5 class="subtitle-nyu mt-4">
+              Selecciona un método de pago
+            </h5>
+
+            <div class="methods-container">
+
+              <div class="payment-methods">
+
+                <button
+                  type="button"
+                  class="payment-btn"
+                  [ngClass]="selectedMethod === 'card' ? 'active' : ''"
+                  (click)="selectMethod('card')">
+                  Tarjeta
+                </button>
+
+                <button
+                  type="button"
+                  class="payment-btn"
+                  [ngClass]="selectedMethod === 'transfer' ? 'active' : ''"
+                  (click)="selectMethod('transfer')">
+                  Transferencia
+                </button>
+
+                <button
+                  type="button"
+                  class="payment-btn"
+                  [ngClass]="selectedMethod === 'wallet' ? 'active' : ''"
+                  (click)="selectMethod('wallet')">
+                  Billetera
+                </button>
+
+              </div>
+
+            </div>
+
+            <div class="pay-button-container">
+
+              <button
+                type="button"
+                class="btn-pay"
+                (click)="goToForm()">
+                Continuar →
+              </button>
+
+            </div>
+
+          </ng-container>
+
+          <ng-container *ngIf="currentStep === 'form'">
+
+            <div class="form-header">
+
+              <button
+                type="button"
+                class="btn-back"
+                (click)="goBackToMethods()">
+                ← Volver
+              </button>
+
+              <h5 class="subtitle-nyu mb-0">
+                Datos del medio de pago
+              </h5>
+
+            </div>
+
+            <div class="payment-box">
+
+              <ng-container [ngSwitch]="selectedMethod">
+
+                <app-card-form
+                  *ngSwitchCase="'card'"
+                  (formReady)="onCardFormReady($event)">
+                </app-card-form>
+
+                <app-transfer-form
+                  *ngSwitchCase="'transfer'"
+                  (formReady)="onTransferFormReady($event)">
+                </app-transfer-form>
+
+                <app-wallet-form
+                  *ngSwitchCase="'wallet'"
+                  (formReady)="onWalletFormReady($event)">
+                </app-wallet-form>
+
+              </ng-container>
+
+            </div>
+
+            <div class="pay-button-container">
+
+              <button
+                type="button"
+                class="btn-pay"
+                (click)="submit()"
+                [disabled]="!canPay()">
+                {{ isProcessing ? 'Procesando...' : 'Pagar' }}
+              </button>
+
+            </div>
+
+          </ng-container>
 
         </ng-container>
 
-      </div>
-
-      <div class="pay-button-container">
-
-        <button
-          class="btn-pay"
-          (click)="submit()"
-          [disabled]="!canPay() || isProcessing">
-
-          {{ isProcessing ? 'Procesando...' : 'Pagar' }}
-
-        </button>
-
-      </div>
+      </ng-container>
 
     </div>
 

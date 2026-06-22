@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
 import { CardFormComponent } from '../card-form/card-form.component';
 import { TransferFormComponent } from '../transfer-form/transfer-form.component';
 import { WalletFormComponent } from '../wallet-form/wallet-form.component';
+import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-selector',
@@ -18,20 +19,67 @@ import { WalletFormComponent } from '../wallet-form/wallet-form.component';
   ],
   templateUrl: './payment-selector.component.html'
 })
-export class PaymentSelectorComponent {
+export class PaymentSelectorComponent implements OnInit {
 
   selectedMethod: string = 'card';
+  currentStep: 'method' | 'form' = 'method';
 
   cardForm: FormGroup | null = null;
   transferForm: FormGroup | null = null;
   walletForm: FormGroup | null = null;
 
+  payment: any = null;
+  referenceId = '';
+
+  isLoading = true;
   isProcessing = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private paymentService: PaymentService
+  ) {}
+
+  ngOnInit(): void {
+    this.referenceId = this.route.snapshot.paramMap.get('id') || '';
+
+    if (!this.referenceId) {
+      this.goToError('Referencia de pago no encontrada');
+      return;
+    }
+
+    this.loadPayment();
+  }
+
+  loadPayment(): void {
+    this.isLoading = true;
+
+    this.paymentService.getPayment(this.referenceId).subscribe({
+      next: (response) => {
+        this.payment = response;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+
+        this.goToError(
+          error.error?.message ||
+          'No se pudo cargar la orden de pago'
+        );
+      }
+    });
+  }
 
   selectMethod(method: string): void {
     this.selectedMethod = method;
+  }
+
+  goToForm(): void {
+    this.currentStep = 'form';
+  }
+
+  goBackToMethods(): void {
+    this.currentStep = 'method';
   }
 
   onCardFormReady(form: FormGroup): void {
@@ -47,7 +95,6 @@ export class PaymentSelectorComponent {
   }
 
   get activeForm(): FormGroup | null {
-
     if (this.selectedMethod === 'card') {
       return this.cardForm;
     }
@@ -64,10 +111,22 @@ export class PaymentSelectorComponent {
   }
 
   canPay(): boolean {
-    return !!this.activeForm && this.activeForm.valid;
+    return !!this.activeForm &&
+      this.activeForm.valid &&
+      !this.isProcessing &&
+      this.payment?.status === 'PENDING';
   }
 
   submit(): void {
+    if (!this.payment) {
+      this.goToError('No existe una orden de pago cargada');
+      return;
+    }
+
+    if (this.payment.status !== 'PENDING') {
+      this.goToError('La orden no se encuentra pendiente de pago');
+      return;
+    }
 
     if (!this.activeForm) {
       return;
@@ -80,44 +139,50 @@ export class PaymentSelectorComponent {
 
     this.isProcessing = true;
 
-    setTimeout(() => {
-
-      const result = {
-        status: 'PAID',
-        orderId: this.generateOrderId(),
-        processedAt: new Date(),
-
-        amount: 150000,
-
-        paymentMethod:
-          this.selectedMethod === 'card'
-            ? 'Tarjeta'
-            : this.selectedMethod === 'transfer'
-            ? 'Transferencia'
-            : 'Billetera Digital',
-
-        transactionId:
-          'TXN-' + Math.floor(Math.random() * 1000000000),
-
-        authorizationCode:
-          'AUTH-' + Math.floor(Math.random() * 100000),
-
+    this.paymentService.confirmPayment(
+      this.referenceId,
+      {
+        status: 'APPROVED',
         rejectionReason: null
-      };
+      }
+    ).subscribe({
+      next: (response) => {
+        this.isProcessing = false;
 
-      this.router.navigate(
-        ['/payment/result'],
-        {
-          state: { result }
-        }
-      );
+        this.router.navigate(['/payment/result'], {
+          state: {
+            result: response
+          }
+        });
+      },
+      error: (error) => {
+        this.isProcessing = false;
 
-    }, 1800);
+        this.router.navigate(['/payment/error'], {
+          state: {
+            error: {
+              status: error.status || 500,
+              message:
+                error.error?.message ||
+                error.message ||
+                'No se pudo procesar el pago',
+              detail: 'La operación no pudo completarse.'
+            }
+          }
+        });
+      }
+    });
   }
 
-  private generateOrderId(): string {
-    return Math.floor(
-      Math.random() * 1000000000
-    ).toString();
+  private goToError(message: string): void {
+    this.router.navigate(['/payment/error'], {
+      state: {
+        error: {
+          status: 500,
+          message,
+          detail: 'Verifica la referencia de pago e intenta nuevamente.'
+        }
+      }
+    });
   }
 }
