@@ -9,6 +9,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { GetTokenDto } from './dto/get-token.dto';
 import { OriginService } from '../common/enums/payment-status.enum';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +22,8 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const exists = await this.userRepo.findOne({ where: { email: dto.email } });
-    if (exists) throw new ConflictException('El email ya está registrado');
+    const exists = await this.userRepo.findOne({ where: [ { email: dto.email }, { username: dto.username } ]});
+    if (exists) throw new ConflictException('El email o username ya está registrado');
 
     const hashed = await bcrypt.hash(dto.password, 10);
     const user = this.userRepo.create({ ...dto, password: hashed });
@@ -35,10 +36,14 @@ export class AuthService {
     const user = await this.userRepo.findOne({ where: { email: dto.email } });
     if (!user) throw new UnauthorizedException('Credenciales inválidas');
 
+    if (!user.isActive) {
+    throw new UnauthorizedException('Usuario desactivado');
+    }
+
     const valid = await bcrypt.compare(dto.password, user.password);
     if (!valid) throw new UnauthorizedException('Credenciales inválidas');
 
-    const payload = { sub: user.id, email: user.email, role: user.role };
+    const payload = { sub: user.id, email: user.email, username: user.username, role: user.role };
     const token = this.jwtService.sign(payload);
 
     return { access_token: token };
@@ -56,7 +61,7 @@ export class AuthService {
     return { access_token: token, service: apiKey.service };
   }
   async generateApiKey(service: OriginService) {
-  const privateKey = `pk_${service.toLowerCase()}_${Math.random().toString(36).substring(2, 15)}`;
+  const privateKey = `pk_${service.toLowerCase()}_${randomBytes(32).toString('hex')}`;
   
   const apiKey = this.apiKeyRepo.create({ privateKey, service });
   await this.apiKeyRepo.save(apiKey);

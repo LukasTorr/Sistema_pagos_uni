@@ -12,6 +12,20 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
+  @ApiProperty()
+  @IsString()
+  username: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(2)
+  firstName: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(2)
+  lastName: string;
+
   @ApiProperty({ enum: UserRole, example: UserRole.ADMIN })
   @IsEnum(UserRole)
   @IsNotEmpty()

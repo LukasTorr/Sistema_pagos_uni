@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentsModule } from './payments/payments.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ApiKeyModule } from './api-key/api-key.module';
 
 @Module({
   imports: [
@@ -21,12 +22,14 @@ import { UsersModule } from './users/users.module';
         database: config.get('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     PaymentsModule,
     UsersModule,
+    ApiKeyModule,
   ],
 })
 export class AppModule {}
