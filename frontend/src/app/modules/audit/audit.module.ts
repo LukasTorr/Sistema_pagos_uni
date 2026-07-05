@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { AuditRoutingModule } from './audit-routing.module';
-
+import { SharedModule } from '../../shared/shared.module';
+import { AuditLogComponent } from './components/audit-log/audit-log.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [AuditLogComponent],
   imports: [
     CommonModule,
-    AuditRoutingModule
+    FormsModule,
+    AuditRoutingModule,
+    SharedModule
   ]
 })
-export class AuditModule { }
+export class AuditModule {}

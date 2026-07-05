@@ -355,3 +355,17 @@ justify-content:center;
 align-items:center;
 margin:24px 0 12px;
 }
+.badge-approved { background-color: var(--nyu-success); color: #fff; }
+
+/* ── Report tabs ── */
+.tab-btn {
+  background: #fff;
+  border: 1px solid var(--nyu-blue);
+  color: var(--nyu-blue);
+  border-radius: 8px;
+  font-weight: 500;
+}
+.tab-btn.active-tab {
+  background: var(--nyu-blue);
+  color: #fff;
+}

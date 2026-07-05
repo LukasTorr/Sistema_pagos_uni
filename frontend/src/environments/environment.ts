@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/v1'
+  apiUrl: 'https://natural-generosity-production-1a76.up.railway.app/v1'
 };

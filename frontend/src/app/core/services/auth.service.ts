@@ -14,7 +14,7 @@ export class AuthService {
   private readonly apiUrl    = environment.apiUrl;
 
   private useMock = false;
-
+  
   private _isLoggedIn$  = new BehaviorSubject<boolean>(false);
   private _currentUser$ = new BehaviorSubject<any>(null);
 
@@ -63,7 +63,7 @@ export class AuthService {
       return of(mockResponse);
     }
 
-    return this.http.post<any>(
+    /*return this.http.post<any>(
       `${this.apiUrl}/auth/login`,
       dto
     ).pipe(
@@ -89,6 +89,35 @@ export class AuthService {
         this._currentUser$.next(res.user);
       })
     );
+  }*/
+  
+
+  return this.http.post<any>(
+    `${this.apiUrl}/auth/login`,
+    dto
+  ).pipe(
+    map(res => {
+      // Decodifica el JWT para obtener datos reales
+      const payload = JSON.parse(atob(res.access_token.split('.')[1]));
+
+      const authResponse: AuthResponse = {
+        token: res.access_token,
+        user: {
+          id:    payload.sub,
+          name:  payload.name || payload.email.split('@')[0],
+          email: payload.email,
+          role:  payload.role || 'ADMIN'
+        }
+      };
+      return authResponse;
+    }),
+    tap(res => {
+      localStorage.setItem(this.TOKEN_KEY, res.token);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));
+      this._isLoggedIn$.next(true);
+      this._currentUser$.next(res.user);
+    })
+  );
   }
 
   logout(): void {

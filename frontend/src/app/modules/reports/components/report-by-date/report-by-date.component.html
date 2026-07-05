@@ -1,1 +1,122 @@
-<p>report-by-date works!</p>
+<!-- Tabs de navegación -->
+<div class="container-fluid py-4 px-4">
+
+  <!-- Header -->
+  <div class="mb-4">
+    <h5 class="fw-bold mb-0" style="color:var(--nyu-blue)">
+      Reportes de Recaudación
+    </h5>
+    <small class="text-muted">Análisis financiero por rango de fechas</small>
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-4 d-flex gap-2">
+    <a routerLink="/reports/service"
+       class="btn btn-sm tab-btn">
+      📊 Por Servicio
+    </a>
+    <a routerLink="/reports/date"
+       class="btn btn-sm tab-btn active-tab">
+      📅 Por Fechas
+    </a>
+  </div>
+
+  <!-- Filtros -->
+  <div class="nyu-card p-3 mb-4">
+    <div class="row g-3 align-items-end">
+
+      <!-- Filtro por servicio — desplegable -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold small">Servicio</label>
+        <select class="form-select"
+                [(ngModel)]="filterService"
+                (change)="onFilterChange()">
+          <option value="">Todos los servicios</option>
+          <option value="MATRICULA">MATRICULA</option>
+          <option value="BIBLIOTECA">BIBLIOTECA</option>
+          <option value="CAFETERIA">CAFETERIA</option>
+          <option value="LABORATORIO">LABORATORIO</option>
+          <option value="DEPORTES">DEPORTES</option>
+          <option value="OTRO">OTRO</option>
+        </select>
+      </div>
+
+      <!-- Desde -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold small">Desde</label>
+        <input type="date"
+               class="form-control"
+               [(ngModel)]="filterFrom"
+               (change)="onFilterChange()">
+      </div>
+
+      <!-- Hasta -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold small">Hasta</label>
+        <input type="date"
+               class="form-control"
+               [(ngModel)]="filterTo"
+               (change)="onFilterChange()">
+      </div>
+
+      <!-- Limpiar -->
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary w-100"
+                (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error -->
+  <app-alert *ngIf="errorMsg" [message]="errorMsg" type="danger">
+  </app-alert>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2">Cargando reporte...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Métricas -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="metric-card metric-paid">
+          <div class="metric-label">Total recaudado</div>
+          <div class="metric-value" style="font-size:1.4rem">
+            {{ formatCLP(totalRecaudado) }}
+          </div>
+          <!-- NgIf: muestra servicio si hay filtro -->
+          <small class="text-muted" *ngIf="filterService">
+            Servicio: {{ filterService }}
+          </small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="metric-card">
+          <div class="metric-label">Total órdenes en período</div>
+          <div class="metric-value">{{ totalOrdenes }}</div>
+          <small class="text-muted" *ngIf="filterFrom || filterTo">
+            <!-- Interpolation: muestra rango seleccionado -->
+            {{ filterFrom || '...' }} → {{ filterTo || '...' }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfica de línea -->
+    <div class="nyu-card p-4 mb-4">
+      <canvas #chartCanvas style="max-height:350px"></canvas>
+    </div>
+
+    <!-- Tabla por fecha -->
+    <div class="nyu-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="px-4 py-3">Fecha</th>

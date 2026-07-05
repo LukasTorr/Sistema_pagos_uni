@@ -4,7 +4,7 @@ import { PaymentMethod } from '../enums/payment-method.enum';
 
 export const ORDERS_MOCK: Order[] = [
   {
-    id: 1,
+    id: '1',
     externalRef: 'MAT-2026-001',
     originService: 'MATRICULA',
     amount: 150000,
@@ -17,7 +17,7 @@ export const ORDERS_MOCK: Order[] = [
     paidAt: '2026-04-20T10:45:00'
   },
   {
-    id: 2,
+    id: '2',
     externalRef: 'MAT-2026-002',
     originService: 'MATRICULA',
     amount: 150000,
@@ -28,7 +28,7 @@ export const ORDERS_MOCK: Order[] = [
     updatedAt: '2026-04-21T09:00:00'
   },
   {
-    id: 3,
+    id: '3',
     externalRef: 'BIB-2026-001',
     originService: 'BIBLIOTECA',
     amount: 5000,
@@ -41,7 +41,7 @@ export const ORDERS_MOCK: Order[] = [
     paidAt: '2026-04-22T11:15:00'
   },
   {
-    id: 4,
+    id: '4',
     externalRef: 'CAF-2026-001',
     originService: 'CAFETERIA',
     amount: 3500,
@@ -53,7 +53,7 @@ export const ORDERS_MOCK: Order[] = [
     updatedAt: '2026-04-23T12:31:00'
   },
   {
-    id: 5,
+    id: '5',
     externalRef: 'MAT-2026-003',
     originService: 'MATRICULA',
     amount: 25000,
@@ -64,7 +64,7 @@ export const ORDERS_MOCK: Order[] = [
     updatedAt: '2026-04-24T08:30:00'
   },
   {
-    id: 6,
+    id: '6',
     externalRef: 'MAT-2026-003',
     originService: 'MATRICULA',
     amount: 150000,
@@ -75,7 +75,7 @@ export const ORDERS_MOCK: Order[] = [
     updatedAt: '2026-04-25T14:00:00'
   },
   {
-    id: 7,
+    id: '7',
     externalRef: 'BIB-2026-002',
     originService: 'BIBLIOTECA',
     amount: 12000,
@@ -88,7 +88,7 @@ export const ORDERS_MOCK: Order[] = [
     paidAt: '2026-04-26T10:20:00'
   },
   {
-    id: 8,
+    id: '8',
     externalRef: 'DEP-2026-001',
     originService: 'CAFETERIA',
     amount: 8000,

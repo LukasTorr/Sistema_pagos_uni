@@ -24,14 +24,14 @@ export class OrderDetailComponent implements OnInit {
     public router: Router,
     private orderService: OrderService
   ) {}
-
+  
   ngOnInit(): void {
-    // Obtiene el ID de la URL
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    // Obtiene el ID como string desde la URL
+    const id = this.route.snapshot.paramMap.get('id') || '';
     this.loadOrder(id);
   }
 
-  loadOrder(id: number): void {
+  loadOrder(id: string): void {
     this.loading = true;
     this.orderService.getById(id).subscribe({
       next: (data) => {
@@ -46,6 +46,13 @@ export class OrderDetailComponent implements OnInit {
   }
 
   cancelOrder(): void {
+    // Quita el cancel por ahora — no existe en el backend
+    this.errorMsg = 'Cancelación no disponible.';
+  }
+
+
+
+  /*cancelOrder(): void {
     if (!this.order) return;
     this.orderService.cancel(this.order.id).subscribe({
       next: (updated) => {
@@ -56,7 +63,7 @@ export class OrderDetailComponent implements OnInit {
         this.errorMsg = err.message;
       }
     });
-  }
+  }*/
 
   goToPayment(): void {
     this.router.navigate(['/payment', this.order?.id]);

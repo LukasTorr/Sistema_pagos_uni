@@ -94,6 +94,7 @@ export class OrderListComponent implements OnInit {
     const map: Record<string, string> = {
       PENDING:   'badge-pending',
       PAID:      'badge-paid',
+      APPROVED:  'badge-approved',
       REJECTED:  'badge-rejected',
       CANCELLED: 'badge-cancelled'
     };
