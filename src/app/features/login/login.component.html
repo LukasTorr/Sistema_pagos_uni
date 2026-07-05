@@ -1,0 +1,105 @@
+﻿<div class="login-shell">
+  <div class="login-shell__bg" aria-hidden="true"></div>
+
+  <main class="login-card">
+    <header class="login-card__logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <path d="M12 2c1.8 2 2.6 4 2.2 6-.3 1.6-1.6 2.3-1.6 3.8 0 1 .6 1.7 1.4 2.2-1.9.6-3.4 2.2-4 4.2.5-2.3-.2-3.6-1.4-4.6-.9-.8-1.4-1.6-1.4-2.7 0-1.6 1.4-2.3 1.6-4C9 6.4 10 4 12 2z" fill="white"/>
+        </svg>
+      </span>
+      <span class="logo-word">NYU</span>
+    </header>
+
+    <h1 class="login-card__title">Iniciar sesion</h1>
+
+    <div *ngIf="errorMessage() as msg" class="alert alert-danger py-2" role="alert">
+      {{ msg }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Paso 1: NetID -->
+      <ng-container *ngIf="step() === 'identifier'; else passwordStep">
+        <div class="field">
+          <input
+            #identifierInput
+            id="email"
+            type="email"
+            class="field__input"
+            placeholder="NetID@nyu.edu"
+            formControlName="email"
+            [class.field__input--invalid]="form.controls.email.invalid && form.controls.email.touched"
+            autocomplete="username"
+          />
+        </div>
+        <div class="field__error" *ngIf="form.controls.email.errors?.['required'] && form.controls.email.touched">
+          Ingresa tu NetID.
+        </div>
+        <div class="field__error" *ngIf="form.controls.email.errors?.['email'] && form.controls.email.touched">
+          Formato de correo invalido.
+        </div>
+
+        <a href="#" class="link-muted" onclick="return false">Olvidaste tu contrasena?</a>
+
+        <p class="mt-2">
+          <a routerLink="/register" class="link-muted">No tienes cuenta? Registrate</a>
+        </p>
+
+        <div class="d-flex justify-content-end mt-3">
+          <button type="button" class="btn-nyu-outline" (click)="goToPasswordStep()">Siguiente</button>
+        </div>
+      </ng-container>
+
+      <!-- Paso 2: Contrasena -->
+      <ng-template #passwordStep>
+        <button type="button" class="identifier-chip" (click)="goBackToIdentifierStep()">
+          {{ form.controls.email.value }} <span class="identifier-chip__edit">Cambiar</span>
+        </button>
+
+        <div class="field mt-3">
+          <input
+            #passwordInput
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="field__input"
+            placeholder="Contrasena"
+            formControlName="password"
+            [class.field__input--invalid]="form.controls.password.invalid && form.controls.password.touched"
+            autocomplete="current-password"
+          />
+        </div>
+        <div class="field__error" *ngIf="form.controls.password.errors?.['required'] && form.controls.password.touched">
+          Ingresa tu contrasena.
+        </div>
+
+        <label class="check-remember">
+          <input type="checkbox" [(ngModel)]="rememberMe" [ngModelOptions]="{ standalone: true }" />
+          Recordarme en este dispositivo
+        </label>
+
+        <div class="d-flex justify-content-end align-items-center mt-3 gap-2">
+          <button type="button" class="link-muted" (click)="togglePasswordVisibility()">
+            {{ showPassword() ? 'Ocultar' : 'Ver' }}
+          </button>
+          <button type="submit" class="btn-nyu-solid" [disabled]="loading()">
+            <span *ngIf="loading()" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading() ? 'Verificando...' : 'Iniciar sesion' }}
+          </button>
+        </div>
+      </ng-template>
+    </form>
+
+    <hr class="divider" />
+
+    <section class="info-block">
+      <p><strong>Atencion:</strong> No utilices tu correo personal, solo tu NetID seguido de &#64;nyu.edu.</p>
+      <p>Al iniciar sesion, aceptas la politica de uso responsable de los sistemas del ecosistema NYU.</p>
+    </section>
+  </main>
+
+  <footer class="login-shell__footer">
+    <a href="#" onclick="return false">Ayuda</a>
+    <a href="#" onclick="return false">Privacidad</a>
+  </footer>
+</div>

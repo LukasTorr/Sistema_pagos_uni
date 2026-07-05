@@ -1,0 +1,142 @@
+﻿<div class="login-shell">
+  <div class="login-shell__bg" aria-hidden="true"></div>
+
+  <main class="login-card">
+    <header class="login-card__logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <path d="M12 2c1.8 2 2.6 4 2.2 6-.3 1.6-1.6 2.3-1.6 3.8 0 1 .6 1.7 1.4 2.2-1.9.6-3.4 2.2-4 4.2.5-2.3-.2-3.6-1.4-4.6-.9-.8-1.4-1.6-1.4-2.7 0-1.6 1.4-2.3 1.6-4C9 6.4 10 4 12 2z" fill="white"/>
+        </svg>
+      </span>
+      <span class="logo-word">NYU</span>
+    </header>
+
+    <h1 class="login-card__title">Crear cuenta</h1>
+
+    <div *ngIf="errorMessage() as msg" class="alert alert-danger py-2" role="alert">{{ msg }}</div>
+    <div *ngIf="successMessage() as msg" class="alert alert-success py-2" role="alert">{{ msg }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="field">
+            <input
+              id="firstName"
+              type="text"
+              class="field__input"
+              placeholder="Nombres"
+              formControlName="firstName"
+              [class.field__input--invalid]="form.controls.firstName.invalid && form.controls.firstName.touched"
+            />
+          </div>
+          <div class="field__error" *ngIf="form.controls.firstName.invalid && form.controls.firstName.touched">
+            Obligatorio.
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="field">
+            <input
+              id="lastName"
+              type="text"
+              class="field__input"
+              placeholder="Apellidos"
+              formControlName="lastName"
+              [class.field__input--invalid]="form.controls.lastName.invalid && form.controls.lastName.touched"
+            />
+          </div>
+          <div class="field__error" *ngIf="form.controls.lastName.invalid && form.controls.lastName.touched">
+            Obligatorio.
+          </div>
+        </div>
+      </div>
+
+      <div class="field mt-3">
+        <input
+          id="rut"
+          type="text"
+          class="field__input"
+          placeholder="RUT (12345678-9)"
+          formControlName="rut"
+          [class.field__input--invalid]="form.controls.rut.invalid && form.controls.rut.touched"
+        />
+      </div>
+      <div class="field__error" *ngIf="form.controls.rut.errors?.['required'] && form.controls.rut.touched">
+        Ingresa tu RUT.
+      </div>
+      <div class="field__error" *ngIf="form.controls.rut.errors?.['rutFormat'] && form.controls.rut.touched">
+        Formato esperado: 12345678-9.
+      </div>
+      <div class="field__error" *ngIf="form.controls.rut.errors?.['rutChecksum'] && form.controls.rut.touched">
+        El dígito verificador no es válido.
+      </div>
+
+      <div class="field mt-3">
+        <input
+          id="email"
+          type="email"
+          class="field__input"
+          placeholder="NetID@nyu.edu"
+          formControlName="email"
+          [class.field__input--invalid]="form.controls.email.invalid && form.controls.email.touched"
+        />
+      </div>
+      <div class="field__error" *ngIf="form.controls.email.errors?.['required'] && form.controls.email.touched">
+        Ingresa tu correo.
+      </div>
+      <div class="field__error" *ngIf="form.controls.email.errors?.['email'] && form.controls.email.touched">
+        Formato de correo inválido.
+      </div>
+      <div class="field__error" *ngIf="form.controls.email.errors?.['nyuEmail'] && form.controls.email.touched">
+        Debes usar tu correo institucional (&#64;nyu.edu).
+      </div>
+
+      <div class="field mt-3">
+        <div class="d-flex align-items-center gap-2">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="field__input"
+            placeholder="Contraseña"
+            formControlName="password"
+            [class.field__input--invalid]="form.controls.password.invalid && form.controls.password.touched"
+          />
+          <button type="button" class="link-muted" (click)="togglePasswordVisibility()">
+            {{ showPassword() ? 'Ocultar' : 'Ver' }}
+          </button>
+        </div>
+      </div>
+      <div class="field__error" *ngIf="form.controls.password.invalid && form.controls.password.touched">
+        Mínimo 6 caracteres.
+      </div>
+
+      <div class="field mt-3">
+        <input
+          id="confirmPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          class="field__input"
+          placeholder="Confirmar contraseña"
+          formControlName="confirmPassword"
+          [class.field__input--invalid]="form.errors?.['passwordsMismatch'] && form.controls.confirmPassword.touched"
+        />
+      </div>
+      <div class="field__error" *ngIf="form.errors?.['passwordsMismatch'] && form.controls.confirmPassword.touched">
+        Las contraseñas no coinciden.
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn-nyu-solid" [disabled]="loading()">
+          <span *ngIf="loading()" class="spinner-border spinner-border-sm me-2"></span>
+          {{ loading() ? 'Creando cuenta…' : 'Registrarme' }}
+        </button>
+      </div>
+    </form>
+
+    <hr class="divider" />
+
+    <p class="info-block">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión aquí</a>.
+    </p>
+  </main>
+</div>

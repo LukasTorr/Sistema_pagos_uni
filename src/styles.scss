@@ -1,0 +1,47 @@
+:root {
+  /* Paleta institucional */
+  --nyu-violet-950: #2E1065;
+  --nyu-violet-800: #3E1F7A;
+  --nyu-violet-600: #6D28D9;
+  --nyu-violet-100: #EDE7F9;
+  --nyu-ink: #1C1B29;
+  --nyu-paper: #F7F5FB;
+  --nyu-success: #16A34A;
+  --nyu-danger: #DC2626;
+  --nyu-stripe: #12081F;
+
+  /* Tipografía */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--nyu-ink);
+  background: var(--nyu-paper);
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+/* Foco visible accesible en toda la app */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--nyu-violet-600);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,208 @@
+.login-shell {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem 4rem;
+  overflow: hidden;
+}
+
+.login-shell__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--nyu-violet-950);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 90px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 90px
+    );
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 26rem;
+  background: white;
+  border-radius: 2px;
+  padding: 2.5rem 2.5rem 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.login-card__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  background: var(--nyu-violet-600);
+}
+
+.logo-word {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  color: var(--nyu-violet-950);
+}
+
+.login-card__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.field {
+  margin-bottom: 0.35rem;
+}
+
+.field__input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #b9b9c2;
+  padding: 0.5rem 0.1rem;
+  font-size: 0.95rem;
+  background: transparent;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid var(--nyu-violet-600);
+  }
+
+  &--invalid {
+    border-bottom-color: var(--nyu-danger);
+  }
+}
+
+.field__error {
+  color: var(--nyu-danger);
+  font-size: 0.78rem;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.link-muted {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--nyu-violet-600);
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.identifier-chip {
+  width: 100%;
+  text-align: left;
+  background: var(--nyu-violet-100);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.identifier-chip__edit {
+  color: var(--nyu-violet-600);
+  font-size: 0.78rem;
+}
+
+.check-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-nyu-outline {
+  background: white;
+  border: 1px solid var(--nyu-violet-600);
+  color: var(--nyu-violet-600);
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+
+  &:hover {
+    background: var(--nyu-violet-100);
+  }
+}
+
+.btn-nyu-solid {
+  background: var(--nyu-violet-600);
+  border: 1px solid var(--nyu-violet-600);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+
+  &:hover {
+    background: var(--nyu-violet-800);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e4e2ea;
+  margin: 1.75rem 0 1.25rem;
+}
+
+.info-block {
+  font-size: 0.8rem;
+  color: #3a3a44;
+  line-height: 1.5;
+
+  p { margin-bottom: 0.75rem; }
+
+  a {
+    color: var(--nyu-violet-600);
+  }
+}
+
+.login-shell__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background: var(--nyu-stripe);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+
+  a {
+    color: white;
+    font-size: 0.8rem;
+    opacity: 0.85;
+    text-decoration: none;
+
+    &:hover { opacity: 1; }
+  }
+}
