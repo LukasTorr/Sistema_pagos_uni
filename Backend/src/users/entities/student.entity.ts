@@ -3,7 +3,10 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 @Entity('students')
 export class Student {
   @PrimaryGeneratedColumn('uuid')
-  id: string; // este UUID se comparte con todos los sistemas
+  id: string;
+
+  @Column({ unique: true })
+  rut: string;
 
   @Column()
   firstName: string;
@@ -12,10 +15,10 @@ export class Student {
   lastName: string;
 
   @Column({ unique: true })
-  email: string; // correo institucional
+  email: string;
 
   @Column()
-  password: string; // hasheada con bcrypt
+  password: string;
 
   @Column({ default: true })
   isActive: boolean;
