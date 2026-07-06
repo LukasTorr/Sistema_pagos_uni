@@ -1,27 +1,24 @@
-<<<<<<< HEAD
-Sistema de Pagos y Tesorería Central NYU
+## Sistema de Pagos y Tesorería Central NYU
 Este proyecto constituye el núcleo transaccional del ecosistema universitario de la NYU. Su objetivo principal es centralizar las órdenes de pago, confirmaciones y comprobantes de todos los módulos (Matrícula, Residencia, Biblioteca y Cafetería) para garantizar la trazabilidad financiera y evitar la duplicidad de cobros.
-
-Requisitos Funcionales Implementados
-Gestión de Órdenes: Creación de órdenes de pago vinculadas a referencias de servicios externos.
-Pasarela de Simulación: Soporte para diversos medios de pago como tarjetas, transferencias y billeteras digitales.
-Notificaciones Automáticas: Comunicación de resultados (confirmación o rechazo) al sistema solicitante mediante webhooks para habilitar procesos de negocio.
-Idempotencia: Garantía de seguridad en cada orden para evitar procesar dos veces un mismo cobro.
-Auditoría y Reportes: Generación de comprobantes y reportes consolidados de recaudación por período y servicio.
-
-Stack Tecnológico (Backend)
-Framework: NestJS.
-ORM: TypeORM aplicando el Repository Pattern.
-Base de Datos: Oracle SQL.
-Documentación: Swagger (OpenAPI).
-Seguridad: Autenticación mediante JWT y protección de rutas con Guards.
+## Requisitos Funcionales Implementados
+- Gestión de Órdenes: Creación de órdenes de pago vinculadas a referencias de servicios externos.
+- Pasarela de Simulación: Soporte para diversos medios de pago como tarjetas, transferencias y billeteras digitales.
+- Notificaciones Automáticas: Comunicación de resultados (confirmación o rechazo) al sistema solicitante mediante webhooks para habilitar procesos de negocio.
+- Idempotencia: Garantía de seguridad en cada orden para evitar procesar dos veces un mismo cobro.
+- Auditoría y Reportes: Generación de comprobantes y reportes consolidados de recaudación por período y servicio.
+## Stack Tecnológico (Backend)
+- Framework: NestJS.
+- ORM: TypeORM aplicando el Repository Pattern.
+- Base de Datos: Oracle SQL.
+- Documentación: Swagger (OpenAPI).
+- Seguridad: Autenticación mediante JWT y protección de rutas con Guards.
 
 ---
 
-Configuración e Instalación Local
+## Configuración e Instalación Local
 Para levantar el entorno de desarrollo en tu máquina local, sigue estos pasos:
 
-Clonar el repositorio
+## Clonar el repositorio
 
 ```bash
 git clone [https://github.com/LukasTorr/Sistema_pagos_uni.git](https://github.com/LukasTorr/Sistema_pagos_uni.git)
@@ -61,7 +58,7 @@ cd Sistemas_pagos_uni/sistema_pagos_uni
 $ npm install
 ```
 
-## Compile and run the project
+## Compilar y ejecutar el proyecto
 
 ```bash
 # development
@@ -74,7 +71,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+## Tests
 
 ```bash
 # unit tests
@@ -87,41 +84,41 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+## Desarrollo
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Una vez que la aplicación NestJS este lista para producción, existen pasos a seguir para asegurrarse que se ejecute de la manera mas ediciente posible. Revisar la [documentación](https://docs.nestjs.com/deployment) para más información.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Si buscas que NestJS desarrolle una plataforma en la nube, revisa [Mau](https://mau.nestjs.com), plataforma oficioal para desarrollar NestJS en AWS. Mau hace que el desarrollo sea rapido y directo, requeriendo solo unos pasos:
 
 ```bash
 $ npm install -g mau
 $ mau deploy
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Con Mau, puedes desarrollar tus aplicaciones con solo unos clicks, permitiendote concentrarte en construir caracteristicas en lugar de preocuparte por manejar la infraestructura.
 
-## Resources
+## Recursos
 
-Check out a few resources that may come in handy when working with NestJS:
+Revisa unos cuantos recursos que podrian ayudarte cuando trabajas con NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Visita [NestJS Documentation](https://docs.nestjs.com) para aprender más acerca del framework.
+- Para preguntas y soportes, visita el [canal de Discord](https://discord.gg/G7Qnnhy).
+- Para profundizarte y obtener más experiencia practica, revisa el video odicial: [courses](https://courses.nestjs.com/).
+- Desarrolla tu aplicación en AWS con la ayuda de [NestJS Mau](https://mau.nestjs.com) en solo unos clicks.
+- Visualiza el grafo de tu aplicación e interactua con NestJS en tiempo real usando: [NestJS Devtools](https://devtools.nestjs.com).
+- Necesitas ayuda con tu proyecto? Revisa la página: [enterprise support](https://enterprise.nestjs.com).
+- Para mantenerte actualizado, sigue la página [X](https://x.com/nestframework) y [LinkedIn](https://linkedin.com/company/nestjs).
+- ¿Buscas trabajo o tienes trabajo para ofrecer? Revisa [Jobs board](https://jobs.nestjs.com).
 
-## Support
+## Soporte
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+## Contactos
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Autor - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
+- Sitio Web - [https://nestjs.com](https://nestjs.com/)
+- X - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
