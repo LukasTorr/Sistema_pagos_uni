@@ -38,16 +38,13 @@ Frontend Angular ---> REST API ---> Backend NestJS ---> MySQL
 
 ## 1. Clonar repositorio
 
-bash
-git clone https://github.com/LukasTorr/Sistema_pagos_uni.git
-cd Sistema_pagos_uni/frontend
+    git clone https://github.com/LukasTorr/Sistema_pagos_uni.git
+    cd Sistema_pagos_uni/frontend
 
 
 ## 2. Instalar dependencias
 
-bash
-npm install
-
+    npm install
 
 ## 3. Configurar entorno
 
