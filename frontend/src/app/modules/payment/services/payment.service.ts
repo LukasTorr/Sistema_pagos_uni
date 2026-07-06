@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders
+} from '@angular/common/http';
 import { Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../../core/services/auth.service';
+import { PaymentAuthService } from './payment-auth.service';
 
 export interface CreatePaymentPayload {
   referenceId: string;
@@ -27,21 +30,32 @@ export class PaymentService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private paymentAuthService: PaymentAuthService
   ) {}
 
   createOrder(payload: CreatePaymentPayload): Observable<any> {
-    return this.ensureSystemToken().pipe(
-      switchMap(() =>
-        this.http.post(`${this.apiUrl}/orders`, payload)
+    return this.ensurePaymentToken().pipe(
+      switchMap(token =>
+        this.http.post(
+          `${this.apiUrl}/orders`,
+          payload,
+          {
+            headers: this.getAuthHeaders(token)
+          }
+        )
       )
     );
   }
 
   getPayment(referenceId: string): Observable<any> {
-    return this.ensureSystemToken().pipe(
-      switchMap(() =>
-        this.http.get(`${this.apiUrl}/${referenceId}`)
+    return this.ensurePaymentToken().pipe(
+      switchMap(token =>
+        this.http.get(
+          `${this.apiUrl}/${referenceId}`,
+          {
+            headers: this.getAuthHeaders(token)
+          }
+        )
       )
     );
   }
@@ -50,42 +64,39 @@ export class PaymentService {
     referenceId: string,
     payload: ConfirmPaymentPayload
   ): Observable<any> {
-    return this.ensureSystemToken().pipe(
-      switchMap(() =>
+    return this.ensurePaymentToken().pipe(
+      switchMap(token =>
         this.http.patch(
           `${this.apiUrl}/${referenceId}/confirm`,
-          payload
+          payload,
+          {
+            headers: this.getAuthHeaders(token)
+          }
         )
       )
     );
   }
 
-  private ensureSystemToken(): Observable<any> {
-    const token = this.authService.getToken();
+  private ensurePaymentToken(): Observable<string> {
+    const token = this.paymentAuthService.getPaymentToken();
 
-    if (token && !this.isTokenExpired(token)) {
+    if (token && !this.paymentAuthService.isTokenExpired(token)) {
       return of(token);
     }
 
-    localStorage.removeItem('nyu_token');
-    localStorage.removeItem('nyu_user');
+    this.paymentAuthService.clearPaymentToken();
 
-    return this.authService.getTokenByPrivateKey(
-      environment.systemPrivateKey
+    return this.paymentAuthService.getTokenByPrivateKey().pipe(
+      switchMap(() => {
+        const newToken = this.paymentAuthService.getPaymentToken();
+        return of(newToken || '');
+      })
     );
   }
 
-  private isTokenExpired(token: string): boolean {
-    try {
-      const payload = JSON.parse(
-        atob(token.split('.')[1])
-      );
-
-      const now = Math.floor(Date.now() / 1000);
-
-      return payload.exp <= now;
-    } catch {
-      return true;
-    }
+  private getAuthHeaders(token: string): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 }
