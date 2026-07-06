@@ -22,8 +22,10 @@ export class UsersService {
 
     return {
       id: student.id,
+      rut: student.rut,
       firstName: student.firstName,
       lastName: student.lastName,
+      gender: student.gender,
       email: student.email,
       isActive: student.isActive,
       createdAt: student.createdAt,
@@ -37,12 +39,9 @@ export class UsersService {
     const valid = await bcrypt.compare(dto.password, student.password);
     if (!valid) throw new UnauthorizedException('Credenciales inválidas');
 
-    return {
-      id: student.id,
-      firstName: student.firstName,
-      lastName: student.lastName,
-      email: student.email,
-    };
+    // Desestructuramos para excluir la contraseña y devolver todos los demás campos
+    const { password, ...studentData } = student;
+    return studentData;
   }
 
   async findById(id: string) {
@@ -51,8 +50,10 @@ export class UsersService {
 
     return {
       id: student.id,
+      rut: student.rut,
       firstName: student.firstName,
       lastName: student.lastName,
+      gender: student.gender,
       email: student.email,
       isActive: student.isActive,
       createdAt: student.createdAt,
@@ -63,8 +64,10 @@ export class UsersService {
     const students = await this.studentRepo.find();
     return students.map(s => ({
       id: s.id,
+      rut: s.rut,
       firstName: s.firstName,
       lastName: s.lastName,
+      gender: s.gender,
       email: s.email,
       isActive: s.isActive,
       createdAt: s.createdAt,

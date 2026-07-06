@@ -17,6 +17,11 @@ export class CreateStudentDto {
   @IsNotEmpty()
   lastName: string;
 
+  @ApiProperty({ example: 'Masculino' })
+  @IsString()
+  @IsNotEmpty()
+  gender: string;
+
   @ApiProperty({ example: 'juan.perez@nyu.edu' })
   @IsEmail()
   email: string;

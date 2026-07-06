@@ -14,6 +14,9 @@ export class Student {
   @Column()
   lastName: string;
 
+  @Column() // Nueva columna para el género
+  gender: string;
+
   @Column({ unique: true })
   email: string;
 
