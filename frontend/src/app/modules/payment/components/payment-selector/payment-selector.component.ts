@@ -34,6 +34,7 @@ export class PaymentSelectorComponent implements OnInit {
 
   payment: any = null;
   referenceId = '';
+  callbackUrl: string | null = null;
 
   isLoading = true;
   isProcessing = false;
@@ -46,6 +47,14 @@ export class PaymentSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.referenceId = this.route.snapshot.paramMap.get('id') || '';
+
+    this.callbackUrl =
+      this.route.snapshot.queryParamMap.get('callback') ||
+      this.route.snapshot.queryParamMap.get('returnUrl');
+
+    if (this.callbackUrl) {
+      sessionStorage.setItem('payment_callback_url', this.callbackUrl);
+    }
 
     if (!this.referenceId) {
       this.goToError('Referencia de pago no encontrada');
@@ -61,6 +70,12 @@ export class PaymentSelectorComponent implements OnInit {
     this.paymentService.getPayment(this.referenceId).subscribe({
       next: (response) => {
         this.payment = response;
+
+        if (response?.callbackUrl) {
+          this.callbackUrl = response.callbackUrl;
+          sessionStorage.setItem('payment_callback_url', response.callbackUrl);
+        }
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -163,6 +178,7 @@ export class PaymentSelectorComponent implements OnInit {
 
         this.router.navigate(['/payment/error'], {
           state: {
+            callbackUrl: this.getCallbackUrl(),
             error: {
               status: error.status || 500,
               message:
@@ -175,6 +191,25 @@ export class PaymentSelectorComponent implements OnInit {
         });
       }
     });
+  }
+
+  returnToOrigin(): void {
+    const callbackUrl = this.getCallbackUrl();
+
+    if (callbackUrl) {
+      const cleanUrl = callbackUrl.trim();
+
+      const normalizedUrl =
+        cleanUrl.startsWith('http://') ||
+        cleanUrl.startsWith('https://')
+          ? cleanUrl
+          : `https://${cleanUrl}`;
+
+      window.location.href = normalizedUrl;
+      return;
+    }
+
+    this.router.navigate(['/']);
   }
 
   private simulatePaymentResult(): ConfirmPaymentPayload {
@@ -208,9 +243,22 @@ export class PaymentSelectorComponent implements OnInit {
     };
   }
 
+  private getCallbackUrl(): string | null {
+    return this.callbackUrl ||
+      this.payment?.callbackUrl ||
+      sessionStorage.getItem('payment_callback_url');
+  }
+
   private goToError(message: string): void {
+    const callbackUrl = this.getCallbackUrl();
+
+    if (callbackUrl) {
+      sessionStorage.setItem('payment_callback_url', callbackUrl);
+    }
+
     this.router.navigate(['/payment/error'], {
       state: {
+        callbackUrl,
         error: {
           status: 500,
           message,

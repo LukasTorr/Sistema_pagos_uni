@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-error',
@@ -12,11 +11,9 @@ import { Router } from '@angular/router';
 export class PaymentErrorComponent {
 
   error: any;
+  callbackUrl: string | null = null;
 
-  constructor(
-    private router: Router
-  ) {
-
+  constructor() {
     this.error =
       history.state.error ??
       {
@@ -25,13 +22,25 @@ export class PaymentErrorComponent {
         detail: 'Ocurrió un error inesperado.'
       };
 
+    this.callbackUrl =
+      history.state.callbackUrl ??
+      sessionStorage.getItem('payment_callback_url');
   }
 
-  retry(): void {
-    this.router.navigate(['/payment/1']);
-  }
+  returnToOrigin(): void {
+    if (!this.callbackUrl) {
+      window.history.back();
+      return;
+    }
 
-  goHome(): void {
-    this.router.navigate(['/orders']);
+    const cleanUrl = this.callbackUrl.trim();
+
+    const normalizedUrl =
+      cleanUrl.startsWith('http://') ||
+      cleanUrl.startsWith('https://')
+        ? cleanUrl
+        : `https://${cleanUrl}`;
+
+    window.location.href = normalizedUrl;
   }
 }

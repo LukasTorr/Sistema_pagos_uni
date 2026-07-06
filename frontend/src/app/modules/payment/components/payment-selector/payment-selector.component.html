@@ -9,7 +9,7 @@
       </h2>
 
       <h5 class="subtitle-nyu">
-        {{ currentStep === 'method' ? 'Orden de pago' : 'Completar pago' }}
+        Orden de pago
       </h5>
 
       <div *ngIf="isLoading" class="text-center p-4">
@@ -21,41 +21,57 @@
 
       <ng-container *ngIf="!isLoading && payment">
 
-        <div
-          class="alert alert-warning text-center mt-3"
-          *ngIf="payment.status !== 'PENDING'">
-          Esta orden ya no se encuentra pendiente de pago.
-        </div>
+        <ng-container *ngIf="currentStep === 'method'">
 
-        <ng-container *ngIf="payment.status === 'PENDING'">
+          <div class="payment-summary">
 
-          <ng-container *ngIf="currentStep === 'method'">
-
-            <div class="payment-summary">
-
-              <div class="summary-row">
-                <span>Referencia</span>
-                <strong>{{ payment.referenceId }}</strong>
-              </div>
-
-              <div class="summary-row">
-                <span>Servicio</span>
-                <strong>{{ payment.originService }}</strong>
-              </div>
-
-              <div class="summary-row">
-                <span>Descripción</span>
-                <strong>{{ payment.description }}</strong>
-              </div>
-
-              <div class="summary-row">
-                <span>Monto</span>
-                <strong>
-                  {{ payment.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
-                </strong>
-              </div>
-
+            <div class="summary-row">
+              <span>Referencia</span>
+              <strong>{{ payment.referenceId }}</strong>
             </div>
+
+            <div class="summary-row">
+              <span>Servicio</span>
+              <strong>{{ payment.originService }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Descripción</span>
+              <strong>{{ payment.description }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Monto</span>
+              <strong>
+                {{ payment.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
+              </strong>
+            </div>
+
+          </div>
+
+          <div
+            class="alert alert-warning text-center mt-3"
+            *ngIf="payment.status !== 'PENDING'">
+
+            <p class="mb-2">
+              Esta orden ya no se encuentra pendiente de pago.
+            </p>
+
+            <p class="mb-3">
+              Estado actual:
+              <strong>{{ payment.status }}</strong>
+            </p>
+
+            <button
+              type="button"
+              class="btn-pay"
+              (click)="returnToOrigin()">
+              Volver al sistema de origen
+            </button>
+
+          </div>
+
+          <ng-container *ngIf="payment.status === 'PENDING'">
 
             <h5 class="subtitle-nyu mt-4">
               Selecciona un método de pago
@@ -106,59 +122,59 @@
 
           </ng-container>
 
-          <ng-container *ngIf="currentStep === 'form'">
+        </ng-container>
 
-            <div class="form-header">
+        <ng-container *ngIf="currentStep === 'form'">
 
-              <button
-                type="button"
-                class="btn-back"
-                (click)="goBackToMethods()">
-                ← Volver
-              </button>
+          <div class="form-header">
 
-              <h5 class="subtitle-nyu mb-0">
-                Datos del medio de pago
-              </h5>
+            <button
+              type="button"
+              class="btn-back"
+              (click)="goBackToMethods()">
+              ← Volver
+            </button>
 
-            </div>
+            <h5 class="subtitle-nyu">
+              Ingresa los datos de pago
+            </h5>
 
-            <div class="payment-box">
+          </div>
 
-              <ng-container [ngSwitch]="selectedMethod">
+          <div class="payment-box">
 
-                <app-card-form
-                  *ngSwitchCase="'card'"
-                  (formReady)="onCardFormReady($event)">
-                </app-card-form>
+            <ng-container [ngSwitch]="selectedMethod">
 
-                <app-transfer-form
-                  *ngSwitchCase="'transfer'"
-                  (formReady)="onTransferFormReady($event)">
-                </app-transfer-form>
+              <app-card-form
+                *ngSwitchCase="'card'"
+                (formReady)="onCardFormReady($event)">
+              </app-card-form>
 
-                <app-wallet-form
-                  *ngSwitchCase="'wallet'"
-                  (formReady)="onWalletFormReady($event)">
-                </app-wallet-form>
+              <app-transfer-form
+                *ngSwitchCase="'transfer'"
+                (formReady)="onTransferFormReady($event)">
+              </app-transfer-form>
 
-              </ng-container>
+              <app-wallet-form
+                *ngSwitchCase="'wallet'"
+                (formReady)="onWalletFormReady($event)">
+              </app-wallet-form>
 
-            </div>
+            </ng-container>
 
-            <div class="pay-button-container">
+          </div>
 
-              <button
-                type="button"
-                class="btn-pay"
-                (click)="submit()"
-                [disabled]="!canPay()">
-                {{ isProcessing ? 'Procesando...' : 'Pagar' }}
-              </button>
+          <div class="pay-button-container">
 
-            </div>
+            <button
+              type="button"
+              class="btn-pay"
+              (click)="submit()"
+              [disabled]="!canPay()">
+              {{ isProcessing ? 'Procesando...' : 'Pagar' }}
+            </button>
 
-          </ng-container>
+          </div>
 
         </ng-container>
 
