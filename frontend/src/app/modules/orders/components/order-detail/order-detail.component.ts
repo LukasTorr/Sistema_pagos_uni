@@ -12,11 +12,9 @@ import { OrderStatus } from '../../../../shared/enums/order-status.enum';
 })
 export class OrderDetailComponent implements OnInit {
   order: Order | null = null;
-  loading    = false;
-  errorMsg   = '';
-  cancelMsg  = '';
+  loading   = false;
+  errorMsg  = '';
 
-  // Enum disponible en el template
   OrderStatus = OrderStatus;
 
   constructor(
@@ -24,16 +22,18 @@ export class OrderDetailComponent implements OnInit {
     public router: Router,
     private orderService: OrderService
   ) {}
-  
+
   ngOnInit(): void {
-    // Obtiene el ID como string desde la URL
     const id = this.route.snapshot.paramMap.get('id') || '';
     this.loadOrder(id);
   }
 
   loadOrder(id: string): void {
-    this.loading = true;
-    this.orderService.getById(id).subscribe({
+    this.loading  = true;
+    this.errorMsg = '';
+
+    // Llama al backend por referenceId
+    this.orderService.getByReference(id).subscribe({
       next: (data) => {
         this.order   = data;
         this.loading = false;
@@ -45,30 +45,6 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
-  cancelOrder(): void {
-    // Quita el cancel por ahora — no existe en el backend
-    this.errorMsg = 'Cancelación no disponible.';
-  }
-
-
-
-  /*cancelOrder(): void {
-    if (!this.order) return;
-    this.orderService.cancel(this.order.id).subscribe({
-      next: (updated) => {
-        this.order    = updated;
-        this.cancelMsg = 'Orden cancelada correctamente.';
-      },
-      error: (err: Error) => {
-        this.errorMsg = err.message;
-      }
-    });
-  }*/
-
-  goToPayment(): void {
-    this.router.navigate(['/payment', this.order?.id]);
-  }
-
   goBack(): void {
     this.router.navigate(['/orders']);
   }
@@ -77,6 +53,7 @@ export class OrderDetailComponent implements OnInit {
     const map: Record<string, string> = {
       PENDING:   'badge-pending',
       PAID:      'badge-paid',
+      APPROVED:  'badge-approved',
       REJECTED:  'badge-rejected',
       CANCELLED: 'badge-cancelled'
     };

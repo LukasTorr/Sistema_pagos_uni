@@ -69,7 +69,10 @@ export class ReportService {
         date, total: 0, count: 0
       };
 
+      // Cuenta todas las órdenes
       cur.count++;
+
+      // Solo suma al total las pagadas/aprobadas
       if (status === 'PAID' || status === 'APPROVED')
         cur.total += amount;
 

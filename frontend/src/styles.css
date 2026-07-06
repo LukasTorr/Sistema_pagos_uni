@@ -369,3 +369,42 @@ margin:24px 0 12px;
   background: var(--nyu-blue);
   color: #fff;
 }
+
+/* ── Badges de estado ── */
+.badge-pending {
+  background-color: #FFC107 !important;
+  color: #000 !important;
+}
+.badge-paid {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+.badge-approved {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+.badge-rejected {
+  background-color: #DC3545 !important;
+  color: #fff !important;
+}
+.badge-cancelled {
+  background-color: #6c757d !important;
+  color: #fff !important;
+}
+
+/* ── Filtros compactos ── */
+.filter-compact .form-label {
+  font-size: 0.75rem;
+  margin-bottom: 3px;
+}
+.filter-compact .form-select,
+.filter-compact .form-control {
+  font-size: 0.82rem;
+  padding: 5px 10px;
+  height: 34px;
+}
+.filter-compact .btn {
+  font-size: 0.82rem;
+  padding: 5px 10px;
+  height: 34px;
+}

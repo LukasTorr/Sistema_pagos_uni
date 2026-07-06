@@ -19,10 +19,8 @@ export class AuditLogComponent implements OnInit {
   filterService = '';
   filterFrom    = '';
   filterTo      = '';
-
-  statusOptions  = ['PENDING', 'PAID', 'REJECTED', 'CANCELLED'];
-  serviceOptions = ['MATRICULA', 'BIBLIOTECA', 'CAFETERIA',
-                    'LABORATORIO', 'DEPORTES', 'OTRO'];
+  statusOptions = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
+  serviceOptions = ['MATRICULA', 'BIBLIOTECA', 'CAFETERIA', 'ALOJAMIENTO', 'OTRO'];
 
   constructor(private auditService: AuditService) {}
 

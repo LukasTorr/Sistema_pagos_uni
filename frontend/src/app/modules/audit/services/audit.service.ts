@@ -49,40 +49,47 @@ export class AuditService {
   }
 
   // Calcula estadísticas desde los datos obtenidos
+  
   calcStats(entries: AuditEntry[]): AuditStats {
-    // Total recaudado solo de pagos PAID
-    const paid   = entries.filter(e => e.status === 'PAID');
+    // Total recaudado — incluye PAID y APPROVED
+    const paid = entries.filter(e =>
+      e.status === 'PAID' || e.status === 'APPROVED'  
+    );
     const totalRecaudado = paid.reduce((sum, e) => sum + e.amount, 0);
 
     // Agrupar por estado
     const estadoMap = new Map<string, { count: number; total: number }>();
     entries.forEach(e => {
       const cur = estadoMap.get(e.status) || { count: 0, total: 0 };
+      const isPaid = e.status === 'PAID' || e.status === 'APPROVED';
       estadoMap.set(e.status, {
         count: cur.count + 1,
-        total: cur.total + (e.status === 'PAID' ? e.amount : 0)
+        total: cur.total + (isPaid ? e.amount : 0)
       });
     });
 
-    // Agrupar por servicio
-    const servicioMap = new Map<string, { count: number; total: number }>();
-    entries.forEach(e => {
-      const cur = servicioMap.get(e.originService) || { count: 0, total: 0 };
-      servicioMap.set(e.originService, {
-        count: cur.count + 1,
-        total: cur.total + (e.status === 'PAID' ? e.amount : 0)
-      });
+  // Agrupar por servicio
+  const servicioMap = new Map<string, { count: number; total: number }>();
+  entries.forEach(e => {
+    const cur = servicioMap.get(e.originService) || { count: 0, total: 0 };
+    const isPaid = e.status === 'PAID' || e.status === 'APPROVED';
+    servicioMap.set(e.originService, {
+      count: cur.count + 1,
+      total: cur.total + (isPaid ? e.amount : 0)
     });
+  });
 
-    return {
-      totalRecaudado,
-      totalOrdenes: entries.length,
-      porEstado:    Array.from(estadoMap.entries()).map(
-        ([status, v]) => ({ status, ...v })
-      ),
-      porServicio:  Array.from(servicioMap.entries()).map(
-        ([service, v]) => ({ service, ...v })
-      )
-    };
-  }
+  return {
+    totalRecaudado,
+    totalOrdenes: entries.length,
+    porEstado:    Array.from(estadoMap.entries()).map(
+      ([status, v]) => ({ status, ...v })
+    ),
+    porServicio:  Array.from(servicioMap.entries()).map(
+      ([service, v]) => ({ service, ...v })
+    )
+  };
+}
+
+
 }
