@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:4200', // Permite la conexión local del frontend en Angular
-      // 'https://url-de-tu-frontend-desplegado.com' // Agrega la URL del frontend cuando se despliegue
+      'https://funny-gnome-389266.netlify.app/'
     ],
     credentials: true,
   });
