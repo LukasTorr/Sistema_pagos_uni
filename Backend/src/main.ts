@@ -10,7 +10,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:4200', // Permite la conexión local del frontend en Angular
-      'https://funny-gnome-389266.netlify.app'
+      'https://funny-gnome-389266.netlify.app',
+      'https://radiant-starship-e17b58.netlify.app/'
     ],
     credentials: true,
   });
