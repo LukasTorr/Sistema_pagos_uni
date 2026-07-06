@@ -3,7 +3,6 @@
   password: string;
 }
 
-/** OJO: el backend actual no devuelve JWT, solo estos datos. Ver nota en AuthService. */
 export interface LoginResponseDto {
   id: string;
   firstName: string;
@@ -20,6 +19,7 @@ export interface ApiErrorDto {
 export interface RegisterRequestDto {
   firstName: string;
   lastName: string;
+  rut: string;
   email: string;
   password: string;
 }

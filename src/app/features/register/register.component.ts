@@ -89,7 +89,7 @@ export class RegisterComponent {
     this.loading.set(true);
     const { firstName, lastName, rut, email, password } = this.form.getRawValue();
 
-    this.auth.register({ firstName, lastName, email, password }).subscribe({
+    this.auth.register({ firstName, lastName, rut, email, password }).subscribe({
       next: () => {
         this.loading.set(false);
         this.successMessage.set('Cuenta creada. Ya puedes iniciar sesión.');
@@ -116,4 +116,5 @@ export class RegisterComponent {
     return 'Ocurrió un error inesperado. Intenta nuevamente en unos minutos.';
   }
 }
+
 
