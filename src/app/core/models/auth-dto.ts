@@ -22,6 +22,7 @@ export interface RegisterRequestDto {
   rut: string;
   email: string;
   password: string;
+  gender: string;
 }
 
 export interface RegisterResponseDto {
