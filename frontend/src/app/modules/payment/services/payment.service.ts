@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface CreatePaymentPayload {
   referenceId: string;
@@ -21,25 +23,69 @@ export interface ConfirmPaymentPayload {
 })
 export class PaymentService {
 
-  private readonly apiUrl = 'http://localhost:3000/v1/payments';
+  private readonly apiUrl = environment.paymentsUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   createOrder(payload: CreatePaymentPayload): Observable<any> {
-    return this.http.post(`${this.apiUrl}/orders`, payload);
+    return this.ensureSystemToken().pipe(
+      switchMap(() =>
+        this.http.post(`${this.apiUrl}/orders`, payload)
+      )
+    );
   }
 
   getPayment(referenceId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${referenceId}`);
+    return this.ensureSystemToken().pipe(
+      switchMap(() =>
+        this.http.get(`${this.apiUrl}/${referenceId}`)
+      )
+    );
   }
 
   confirmPayment(
     referenceId: string,
     payload: ConfirmPaymentPayload
   ): Observable<any> {
-    return this.http.patch(
-      `${this.apiUrl}/${referenceId}/confirm`,
-      payload
+    return this.ensureSystemToken().pipe(
+      switchMap(() =>
+        this.http.patch(
+          `${this.apiUrl}/${referenceId}/confirm`,
+          payload
+        )
+      )
     );
+  }
+
+  private ensureSystemToken(): Observable<any> {
+    const token = this.authService.getToken();
+
+    if (token && !this.isTokenExpired(token)) {
+      return of(token);
+    }
+
+    localStorage.removeItem('nyu_token');
+    localStorage.removeItem('nyu_user');
+
+    return this.authService.getTokenByPrivateKey(
+      environment.systemPrivateKey
+    );
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      );
+
+      const now = Math.floor(Date.now() / 1000);
+
+      return payload.exp <= now;
+    } catch {
+      return true;
+    }
   }
 }

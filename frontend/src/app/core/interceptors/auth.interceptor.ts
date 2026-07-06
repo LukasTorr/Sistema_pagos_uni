@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+
   constructor(private authService: AuthService) {}
 
   intercept(
@@ -21,8 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (token) {
       const cloned = req.clone({
-        setHeaders: { Authorization: `Bearer ${token}` }
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
       return next.handle(cloned);
     }
 

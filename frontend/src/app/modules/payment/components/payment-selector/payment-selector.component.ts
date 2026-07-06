@@ -6,7 +6,11 @@ import { FormGroup } from '@angular/forms';
 import { CardFormComponent } from '../card-form/card-form.component';
 import { TransferFormComponent } from '../transfer-form/transfer-form.component';
 import { WalletFormComponent } from '../wallet-form/wallet-form.component';
-import { PaymentService } from '../../services/payment.service';
+
+import {
+  PaymentService,
+  ConfirmPaymentPayload
+} from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-selector',
@@ -137,14 +141,13 @@ export class PaymentSelectorComponent implements OnInit {
       return;
     }
 
+    const simulatedResult = this.simulatePaymentResult();
+
     this.isProcessing = true;
 
     this.paymentService.confirmPayment(
       this.referenceId,
-      {
-        status: 'APPROVED',
-        rejectionReason: null
-      }
+      simulatedResult
     ).subscribe({
       next: (response) => {
         this.isProcessing = false;
@@ -172,6 +175,37 @@ export class PaymentSelectorComponent implements OnInit {
         });
       }
     });
+  }
+
+  private simulatePaymentResult(): ConfirmPaymentPayload {
+    const formValue = this.activeForm?.value;
+
+    if (this.selectedMethod === 'transfer') {
+      const accountNumber = String(formValue?.accountNumber || '');
+
+      if (accountNumber.endsWith('000')) {
+        return {
+          status: 'REJECTED',
+          rejectionReason: 'Fondos insuficientes'
+        };
+      }
+    }
+
+    if (this.selectedMethod === 'wallet') {
+      const pin = String(formValue?.pin || '');
+
+      if (pin === '0000') {
+        return {
+          status: 'REJECTED',
+          rejectionReason: 'PIN de billetera incorrecto'
+        };
+      }
+    }
+
+    return {
+      status: 'APPROVED',
+      rejectionReason: null
+    };
   }
 
   private goToError(message: string): void {

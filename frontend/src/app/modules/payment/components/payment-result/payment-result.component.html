@@ -1,115 +1,132 @@
-<div class="receipt-page">
+<div class="result-page">
 
-  <div class="receipt-card" *ngIf="result; else noResult">
+  <div
+    class="result-card"
+    [ngClass]="{
+      'payment-success': isApproved(),
+      'payment-rejected': isRejected()
+    }">
 
-    <h2 class="receipt-title">
-      Servicio de Pagos NYU
+    <div
+      class="result-icon"
+      [ngClass]="{
+        'icon-success': isApproved(),
+        'icon-rejected': isRejected()
+      }">
+
+      <span *ngIf="isApproved()">✓</span>
+      <span *ngIf="isRejected()">×</span>
+
+    </div>
+
+    <h2 class="title-nyu">
+      {{ getTitle() }}
     </h2>
 
-    <h4 class="receipt-subtitle">
-      Comprobante de Orden de Pago
-    </h4>
+    <h5 class="subtitle-nyu">
+      {{ getSubtitle() }}
+    </h5>
 
-    <div
-      class="receipt-status"
-      [ngClass]="getStatusClass(result.status)">
-      {{ getStatusLabel(result.status) }}
+    <div *ngIf="result; else noResult">
+
+      <div class="receipt-section">
+
+        <div class="receipt-row">
+          <span>Referencia</span>
+          <strong>{{ result.referenceId }}</strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Servicio</span>
+          <strong>{{ result.originService }}</strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Descripción</span>
+          <strong>{{ result.description }}</strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Monto</span>
+          <strong>
+            {{ result.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
+          </strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Método de pago</span>
+          <strong>{{ result.paymentMethod }}</strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Estado</span>
+          <strong [ngClass]="getStatusClass(result.status)">
+            {{ getStatusLabel(result.status) }}
+          </strong>
+        </div>
+
+        <div class="receipt-row">
+          <span>Fecha</span>
+          <strong>
+            {{ result.updatedAt || result.createdAt | date:'dd/MM/yyyy HH:mm' }}
+          </strong>
+        </div>
+
+      </div>
+
+      <div
+        class="rejection-box"
+        *ngIf="isRejected()">
+
+        <h6>Motivo del rechazo</h6>
+
+        <p>
+          {{ result.rejectionReason || 'La operación fue rechazada por el sistema.' }}
+        </p>
+
+      </div>
+
+      <div class="result-actions">
+
+        <button
+          *ngIf="isApproved()"
+          type="button"
+          class="btn-secondary-result"
+          (click)="printReceipt()">
+          Descargar PDF
+        </button>
+
+        <button
+          type="button"
+          class="btn-primary-result"
+          [ngClass]="{
+            'btn-danger-result': isRejected()
+          }"
+          (click)="returnToOrigin()">
+          Volver al sistema de origen
+        </button>
+
+      </div>
+
     </div>
 
-    <hr>
+    <ng-template #noResult>
 
-    <div class="receipt-row">
-      <span>ID de pago</span>
-      <strong>{{ result.id }}</strong>
-    </div>
+      <div class="alert alert-warning text-center">
+        No se encontró información del resultado del pago.
+      </div>
 
-    <div class="receipt-row">
-      <span>Referencia</span>
-      <strong>{{ result.referenceId }}</strong>
-    </div>
+      <div class="result-actions">
+        <button
+          type="button"
+          class="btn-primary-result"
+          (click)="returnToOrigin()">
+          Volver
+        </button>
+      </div>
 
-    <div class="receipt-row">
-      <span>Servicio origen</span>
-      <strong>{{ result.originService }}</strong>
-    </div>
-
-    <div class="receipt-row">
-      <span>Método de pago</span>
-      <strong>{{ result.paymentMethod }}</strong>
-    </div>
-
-    <div class="receipt-row">
-      <span>Monto</span>
-      <strong>
-        {{ result.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}
-      </strong>
-    </div>
-
-    <div class="receipt-row">
-      <span>Descripción</span>
-      <strong>{{ result.description }}</strong>
-    </div>
-
-    <div class="receipt-row">
-      <span>Fecha creación</span>
-      <strong>
-        {{ result.createdAt | date:'dd/MM/yyyy HH:mm' }}
-      </strong>
-    </div>
-
-    <div class="receipt-row">
-      <span>Última actualización</span>
-      <strong>
-        {{ result.updatedAt | date:'dd/MM/yyyy HH:mm' }}
-      </strong>
-    </div>
-
-    <div
-      class="receipt-row"
-      *ngIf="result.rejectionReason">
-      <span>Motivo rechazo</span>
-      <strong>{{ result.rejectionReason }}</strong>
-    </div>
-
-    <hr>
-
-    <p class="receipt-message">
-      Esta orden fue registrada correctamente en el sistema de pagos NYU.
-      El estado actual de la orden es {{ getStatusLabel(result.status) }}.
-    </p>
-
-    <div class="receipt-actions">
-      <button
-        class="btn-receipt"
-        (click)="printReceipt()">
-        Descargar PDF
-      </button>
-
-      <button
-        class="btn-receipt-secondary"
-        (click)="goBack()">
-        Volver
-      </button>
-    </div>
+    </ng-template>
 
   </div>
-
-  <ng-template #noResult>
-    <div class="receipt-card text-center">
-      <h2 class="receipt-title">
-        No hay comprobante disponible
-      </h2>
-
-      <p class="receipt-message">
-        No se recibieron datos del pago. Vuelve al formulario e intenta nuevamente.
-      </p>
-
-      <button
-        class="btn-receipt-secondary"
-        (click)="goBack()">
-        Volver al pago
-      </button>
-    </div>
-  </ng-template>
 
 </div>

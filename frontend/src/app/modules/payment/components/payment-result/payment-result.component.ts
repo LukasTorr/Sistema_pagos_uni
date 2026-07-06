@@ -17,56 +17,108 @@ export class PaymentResultComponent {
     this.result = history.state.result;
   }
 
+  isApproved(): boolean {
+    return this.result?.status === 'APPROVED' ||
+           this.result?.status === 'PAID';
+  }
+
+  isRejected(): boolean {
+    return this.result?.status === 'REJECTED';
+  }
+
+  getTitle(): string {
+    if (this.isApproved()) {
+      return 'Comprobante de Pago';
+    }
+
+    if (this.isRejected()) {
+      return 'Pago Rechazado';
+    }
+
+    return 'Resultado del Pago';
+  }
+
+  getSubtitle(): string {
+    if (this.isApproved()) {
+      return 'Operación finalizada correctamente';
+    }
+
+    if (this.isRejected()) {
+      return 'La transacción no pudo completarse';
+    }
+
+    return 'Operación finalizada';
+  }
+
   getStatusLabel(status: string): string {
-    if (status === 'PAID' || status === 'APPROVED') {
-      return 'Pagado';
-    }
+    switch (status) {
+      case 'APPROVED':
+      case 'PAID':
+        return 'Pagado';
 
-    if (status === 'PENDING') {
-      return 'Pendiente';
-    }
+      case 'PENDING':
+        return 'Pendiente';
 
-    if (status === 'REJECTED') {
-      return 'Rechazado';
-    }
+      case 'REJECTED':
+        return 'Rechazado';
 
-    if (status === 'CANCELLED') {
-      return 'Cancelado';
-    }
+      case 'CANCELLED':
+        return 'Cancelado';
 
-    return status || 'Sin estado';
+      default:
+        return status || 'Sin estado';
+    }
   }
 
   getStatusClass(status: string): string {
-    if (status === 'PAID' || status === 'APPROVED') {
-      return 'status-paid';
-    }
+    switch (status) {
+      case 'APPROVED':
+      case 'PAID':
+        return 'status-paid';
 
-    if (status === 'PENDING') {
-      return 'status-pending';
-    }
+      case 'REJECTED':
+        return 'status-rejected';
 
-    if (status === 'REJECTED') {
-      return 'status-rejected';
-    }
+      case 'PENDING':
+        return 'status-pending';
 
-    if (status === 'CANCELLED') {
-      return 'status-cancelled';
-    }
+      case 'CANCELLED':
+        return 'status-cancelled';
 
-    return 'status-default';
+      default:
+        return 'status-default';
+    }
   }
 
-  goBack(): void {
-    if (this.result?.referenceId) {
-      this.router.navigate(['/payment', this.result.referenceId]);
+  returnToOrigin(): void {
+    const callbackUrl = this.result?.callbackUrl;
+
+    if (callbackUrl) {
+      window.location.href = this.normalizeExternalUrl(callbackUrl);
       return;
     }
 
-    this.router.navigate(['/orders']);
+    this.router.navigate(['/']);
+  }
+
+  private normalizeExternalUrl(url: string): string {
+    const cleanUrl = url.trim();
+
+    if (
+      cleanUrl.startsWith('http://') ||
+      cleanUrl.startsWith('https://')
+    ) {
+      return cleanUrl;
+    }
+
+    return `https://${cleanUrl}`;
   }
 
   printReceipt(): void {
+    if (!this.isApproved()) {
+      return;
+    }
+
     window.print();
   }
 }
