@@ -30,10 +30,7 @@ La aplicación permite:
 ---
 
 # Arquitectura General
-
-text
 Frontend Angular ---> REST API ---> Backend NestJS ---> MySQL
-
 
 ---
 
@@ -41,56 +38,47 @@ Frontend Angular ---> REST API ---> Backend NestJS ---> MySQL
 
 ## 1. Clonar repositorio
 
-bash
-git clone https://github.com/LukasTorr/Sistema_pagos_uni.git
-cd Sistema_pagos_uni/frontend
+    git clone https://github.com/LukasTorr/Sistema_pagos_uni.git
+    cd Sistema_pagos_uni/frontend
 
 
 ## 2. Instalar dependencias
 
-bash
-npm install
-
+    npm install
 
 ## 3. Configurar entorno
 
 Verificar el archivo:
 
-text
-src/environments/environment.ts
-
+    src/environments/environment.ts
 
 Configuración de ejemplo:
 
-ts
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/v1'
-};
+    export const environment = {
 
+      production: false,
+  
+      apiUrl: 'http://localhost:3000/v1'
+  
+    };
 
-Asegurarse de que el backend se encuentre ejecutándose en la misma dirección.
+**Asegurarse de que el backend se encuentre ejecutándose en la misma dirección.**
 
 ---
 
 # Ejecución del Proyecto
 
 ## Modo desarrollo
+En consola:
 
-bash
-ng serve
-
+    ng serve
 
 o
 
-bash
-npm start
+    npm start
 
 
-La aplicación quedará disponible en:
-
-text
-http://localhost:4200
+La aplicación quedará disponible en: http://localhost:4200
 
 
 ---
@@ -122,44 +110,40 @@ http://localhost:4200
 
 Consumo de endpoints REST:
 
-http
-GET    /payments/:referenceId
-PATCH  /payments/:referenceId/confirm
-POST   /auth/login
-POST   /auth/token
-
+    GET    /payments/:referenceId
+    PATCH  /payments/:referenceId/confirm
+    POST   /auth/login
+    POST   /auth/token
 
 ---
 
 # Estructura del Proyecto
 
-text
-src/
-│
-├── app/
-│   ├── core/
-│   │   ├── services/
-│   │   ├── interceptors/
-│   │   └── guards/
-│   │
-│   ├── modules/
-│   │   ├── auth/
-│   │   ├── payment/
-│   │   ├── orders/
-│   │   ├── reports/
-│   │   └── audit/
-│   │
-│   └── shared/
-│
-├── assets/
-└── environments/
+    src/
+    │
+    ├── app/
+    │   ├── core/
+    │   │   ├── services/
+    │   │   ├── interceptors/
+    │   │   └── guards/
+    │   │
+    │   ├── modules/
+    │   │   ├── auth/
+    │   │   ├── payment/
+    │   │   ├── orders/
+    │   │   ├── reports/
+    │   │   └── audit/
+    │   │
+    │   └── shared/
+    │
+    ├── assets/
+    └── environments/
 
 
 ---
 
 # Flujo de Pago
 
-text
 Sistema Externo ---> Genera Orden ---> Sistema de Pagos NYU ---> Selección Método de Pago
 ---> Confirmación ---> Comprobante
 
@@ -171,15 +155,11 @@ Sistema Externo ---> Genera Orden ---> Sistema de Pagos NYU ---> Selección Mét
 
 ## Generar Componentes
 
-bash
-ng generate component nombre-componente
-
+    ng generate component nombre-componente
 
 ## Generar Servicios
 
-bash
-ng generate service nombre-servicio
-
+    ng generate service nombre-servicio
 
 ---
 
@@ -187,4 +167,3 @@ ng generate service nombre-servicio
 - Kary tudela
 - Denis Condori
 - Andre Gerra
-- 
